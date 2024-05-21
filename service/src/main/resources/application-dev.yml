@@ -21,3 +21,8 @@ spring:
         max-wait: -1
         max-idle: 8
         min-idle: 0
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    history-level: full
+    check-process-definitions: true
