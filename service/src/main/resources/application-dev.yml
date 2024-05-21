@@ -2,7 +2,7 @@ server:
   port: 8800
 mybatis-plus:
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 查看日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
@@ -10,3 +10,8 @@ spring:
     url: jdbc:mysql://localhost:13306/mi-travel-reimbursement?serverTimezone=GMT%2B8&useSSL=false&characterEncoding=utf-8
     username: root
     password: 123456
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    history-level: full
+    check-process-definitions: true
