@@ -1,26 +1,0 @@
-
-{
-java:S1854"8Remove this useless assignment to local variable "rows".(€ÈÂ8ØíîÕù1J$c0e83412-6abb-4d74-9526-e0b042cc9207
-l
-java:S1481")Remove this unused "rows" local variable.(€ÈÂ8ÛíîÕù1J$94ca04d2-068b-468b-b489-913ce455b8e4
-~	java:S125"<This block of commented-out lines of code should be removed.(™¯æ›8ÜíîÕù1J$e2084252-ce61-4ce3-a745-a5fca02f76b2
-€
-java:S1854,"8Remove this useless assignment to local variable "rows".(ÌÒšçÿÿÿÿÿ8ÜíîÕù1J$cae5e6cd-fe2e-445c-a867-918362e71a03
-‚
-java:S1854&":Remove this useless assignment to local variable "result".(Ê¦´úÿÿÿÿ8ÜíîÕù1J$a769f001-44b5-46ca-925a-e894fac9d570
-s
-java:S1481&"+Remove this unused "result" local variable.(Ê¦´úÿÿÿÿ8İíîÕù1J$51121389-953c-4e67-9b09-3a1e468a0153
-~	java:S125'"<This block of commented-out lines of code should be removed.(Î¼²À8İíîÕù1J$ea5b1361-6fe3-41ce-97df-c9e60ca5378c
-q
-java:S1481,")Remove this unused "rows" local variable.(ÌÒšçÿÿÿÿÿ8İíîÕù1J$3345c8d3-7ebd-4ec0-8374-50ddb20831b4
-~	java:S125-"<This block of commented-out lines of code should be removed.(™¯æ›8ŞíîÕù1J$26340203-105d-43e9-894f-233b822bf305
-€
-java:S1854:"8Remove this useless assignment to local variable "rows".(—¹Á›øÿÿÿÿ8ŞíîÕù1J$c0accf1f-f8dd-4a85-832c-23cc66288a00
-‚
-java:S18545":Remove this useless assignment to local variable "result".(Ê¦´úÿÿÿÿ8ŞíîÕù1J$0ae7c392-782f-44e5-beb8-b69f94fb0cb1
-s
-java:S14815"+Remove this unused "result" local variable.(Ê¦´úÿÿÿÿ8ŞíîÕù1J$92064188-0f9d-4b61-9552-bd5dffa7c062
-~	java:S1256"<This block of commented-out lines of code should be removed.(Î¼²À8ŞíîÕù1J$f38eb378-6db9-48ee-a8cb-3ad38a4462a6
-q
-java:S1481:")Remove this unused "rows" local variable.(—¹Á›øÿÿÿÿ8ßíîÕù1J$a63ad10b-9480-4684-9f31-7e7e2da29ab0
-~	java:S125;"<This block of commented-out lines of code should be removed.(™¯æ›8ßíîÕù1J$6015750f-b02a-4787-a1f1-63080547446c
