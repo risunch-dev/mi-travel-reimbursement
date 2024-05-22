@@ -1,4 +1,4 @@
-package com.xiaomi.info.process.reponse;
+package com.xiaomi.info.process.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
