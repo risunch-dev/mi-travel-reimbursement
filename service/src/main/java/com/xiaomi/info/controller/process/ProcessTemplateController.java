@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaomi.info.common.enums.ErrorCodes;
 import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.model.process.XmProcessTemplate;
-import com.xiaomi.info.process.reponse.ProcessFileResponse;
+import com.xiaomi.info.process.response.ProcessFileResponse;
 import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.ProcessTemplateService;
 import lombok.extern.slf4j.Slf4j;
