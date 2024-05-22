@@ -1,7 +1,7 @@
 package com.xiaomi.info.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.xiaomi.info.model.process.XmProcessType;
+import com.xiaomi.info.model.process.XmProcessTemplate;
 
 /**
  * ClassName: ProcessTemplateMapper
@@ -12,5 +12,5 @@ import com.xiaomi.info.model.process.XmProcessType;
  * @Create 2024/5/22 15:31
  * @Version 1.0
  */
-public interface XmProcessTemplateMapper extends BaseMapper<XmProcessType> {
+public interface XmProcessTemplateMapper extends BaseMapper<XmProcessTemplate> {
 }
