@@ -3,6 +3,8 @@ package com.xiaomi.info.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaomi.info.model.process.XmProcessType;
 
+import java.util.List;
+
 /**
  * ClassName: ProcessTypeService
  * Package: com.xiaomi.info.service
@@ -13,4 +15,9 @@ import com.xiaomi.info.model.process.XmProcessType;
  * @Version 1.0
  */
 public interface ProcessTypeService extends IService<XmProcessType> {
+    /**
+     * 查询所有审批分类及其模板
+     * @return
+     */
+    List<XmProcessType> findProcessType();
 }
