@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.xiaomi.info.model.base.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -17,6 +18,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@Builder
 @ApiModel(description = "XmProcess")
 @TableName("xm_process")
 public class XmProcess extends BaseEntity {

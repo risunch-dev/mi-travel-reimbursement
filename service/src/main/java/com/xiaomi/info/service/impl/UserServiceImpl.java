@@ -47,4 +47,11 @@ public class UserServiceImpl extends ServiceImpl<XmUserMapper, XmUser> implement
                 .build();
         return userResponse;
     }
+
+    @Override
+    public XmUser getByUserName(String userName) {
+        XmUser xmUser = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
+                .eq(XmUser::getName, userName));
+        return xmUser;
+    }
 }
