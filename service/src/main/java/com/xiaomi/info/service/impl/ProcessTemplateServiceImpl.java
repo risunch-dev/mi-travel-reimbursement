@@ -4,13 +4,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.mapper.XmProcessTemplateMapper;
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.model.process.XmProcessType;
+import com.xiaomi.info.service.ProcessService;
 import com.xiaomi.info.service.ProcessTemplateService;
 import com.xiaomi.info.service.ProcessTypeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -26,7 +31,7 @@ import java.util.stream.Collectors;
  * @Create 2024/5/22 15:40
  * @Version 1.0
  */
-
+@Slf4j
 @Service
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ProcessTemplateServiceImpl extends ServiceImpl<XmProcessTemplateMapper, XmProcessTemplate> implements ProcessTemplateService {
@@ -36,6 +41,10 @@ public class ProcessTemplateServiceImpl extends ServiceImpl<XmProcessTemplateMap
 
     @Resource
     private ProcessTypeService processTypeService;
+
+    @Resource
+    private ProcessService processService;
+
 
     @Override
     public IPage<XmProcessTemplate> selectPage(Page<XmProcessTemplate> pageParam) {
@@ -70,6 +79,10 @@ public class ProcessTemplateServiceImpl extends ServiceImpl<XmProcessTemplateMap
         xmProcessTemplate.setStatus(1);
         xmProcessTemplateMapper.updateById(xmProcessTemplate);
 
-        //TODO 部署流程定义，后续完善
+        if(StringUtils.isEmpty(xmProcessTemplate.getProcessDefinitionPath())) {
+            log.info("压缩包上传路径为空");
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "压缩包上传路径为空");
+        }
+        processService.deployByZip(xmProcessTemplate.getProcessDefinitionPath());
     }
 }
