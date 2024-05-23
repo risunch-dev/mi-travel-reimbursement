@@ -16,5 +16,7 @@ import com.xiaomi.info.user.response.UserResponse;
  * @Version 1.0
  */
 public interface UserService extends IService<XmUser> {
-    public UserResponse userDetail(Long userId);
+    UserResponse userDetail(Long userId);
+
+    XmUser getByUserName(String userName);
 }

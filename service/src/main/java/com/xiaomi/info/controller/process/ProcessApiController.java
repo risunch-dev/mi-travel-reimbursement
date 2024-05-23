@@ -2,15 +2,14 @@ package com.xiaomi.info.controller.process;
 
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.model.process.XmProcessType;
+import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessTypeListResponse;
 import com.xiaomi.info.response.Response;
+import com.xiaomi.info.service.ProcessService;
 import com.xiaomi.info.service.ProcessTemplateService;
 import com.xiaomi.info.service.ProcessTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +31,20 @@ public class ProcessApiController {
 
     @Autowired
     private ProcessTemplateService processTemplateService;
+
+    @Autowired
+    private ProcessService processService;
+
+    /**
+     * 启动流程
+     * @param processFormRequest
+     * @return
+     */
+    @PostMapping("/startUp")
+    public Response<Boolean> start(@RequestBody ProcessFormRequest processFormRequest, @RequestBody Long userId) {
+        processService.startUp(processFormRequest, userId);
+        return Response.success();
+    }
 
     /**
      "获取全部审批分类及模板

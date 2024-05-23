@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaomi.info.model.process.XmProcess;
+import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessResponse;
 import com.xiaomi.info.process.request.ProcessQueryRequest;
 
@@ -24,4 +25,11 @@ public interface ProcessService extends IService<XmProcess> {
      * @param deployPath
      */
     void deployByZip(String deployPath);
+
+    /**
+     * 启动流程实例
+     * @param processFormRequest
+     * @param userId
+     */
+    void startUp(ProcessFormRequest processFormRequest, Long userId);
 }
