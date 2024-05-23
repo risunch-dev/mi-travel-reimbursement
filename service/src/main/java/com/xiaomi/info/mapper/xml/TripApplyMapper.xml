@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+   <!DOCTYPE mapper
+       PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+       "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cy.xm_travel_reimbursement.mapper.TripApplyMapper">
+<resultMap id="TripApplyMap" type="com.cy.xm_travel_reimbursement.entity.TripApply">
+    <id column="id" property="id"/>
+    <result column="travel_city" property="travelCity"/>
+    <result column="attachment" property="attachMent"/>
+    <result column="create_time" property="createdTime"/>
+    <result column="create_user" property="createdUser"/>
+    <result column="update_time" property="updateTime"/>
+    <result column="update_user" property="updateUser"/>
+</resultMap>
+
+<!-- 插入用户数据：Integer insert(User user) -->
+<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO
+    xm_trip_apply (name,status,days,amount,travel_city,attachment,create_time, create_user, update_time, update_user)
+    VALUES
+    (#{name},#{status},#{days},#{amount},#{travelCity},#{attachMent} ,#{createdTime}, #{createdUser}, #{updateTime}, #{updateUser})
+</insert>
+
+<!-- 根据用户名查询用户数据：User findByName(String name)-->
+<select id="getByName" resultMap="TripApplyMap">
+    SELECT
+    *
+    FROM
+    xm_trip_apply
+    WHERE
+    name = #{title}
+</select>
+
+<update id="updateDetailById">
+        UPDATE
+            xm_trip_apply
+        SET
+            name = #{title},
+            days = #{days},
+            travel_city = #{travelCity},
+            attachment = #{attachMent},
+            update_user = #{updateUser},
+            update_time = #{updateTime}
+        WHERE
+            id = #{id}
+ </update>
+
+    <select id="findById" resultMap="TripApplyMap">
+        SELECT
+            *
+        FROM
+            xm_trip_apply
+        WHERE
+            id = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM
+            xm_trip_apply
+        WHERE
+            id=#{id}
+    </delete>
+</mapper>
