@@ -18,4 +18,10 @@ import com.xiaomi.info.process.request.ProcessQueryRequest;
  */
 public interface ProcessService extends IService<XmProcess> {
     IPage<ProcessResponse> selectPage(Page<ProcessResponse> pageParam, ProcessQueryRequest processQueryRequest);
+
+    /**
+     * 部署流程定义
+     * @param deployPath
+     */
+    void deployByZip(String deployPath);
 }
