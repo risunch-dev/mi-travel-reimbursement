@@ -1,10 +1,11 @@
 package com.xiaomi.info.mapper;
 
 import com.xiaomi.info.model.ReimBurseMent;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 
-
+@Mapper
 public interface ReimBurseMentMapper {
         Integer insert(ReimBurseMent reimBurseMent);
 

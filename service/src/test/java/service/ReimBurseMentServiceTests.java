@@ -1,21 +1,20 @@
-package com.cy.xm_travel_reimbursement.service;
+package service;
 
-import com.cy.xm_travel_reimbursement.entity.ReimBurseMent;
-import com.cy.xm_travel_reimbursement.entity.TripApply;
-import com.cy.xm_travel_reimbursement.service.ex.ServiceException;
+import com.google.protobuf.ServiceException;
+import com.xiaomi.info.model.ReimBurseMent;
+import com.xiaomi.info.service.ReimBurseMentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
+import javax.annotation.Resource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ReimBurseMentServiceTests {
-    @Autowired
-    private IReimBurseMentService iReimBurseMentService;
+    @Resource
+    private ReimBurseMentService reimBurseMentService;
 
     @Test
     public void submit() {
@@ -27,9 +26,9 @@ public class ReimBurseMentServiceTests {
             reimBurseMent.setStatus(0);
             reimBurseMent.setItem("去北京");
             reimBurseMent.setApplyTime("123");
-            iReimBurseMentService.submit(reimBurseMent);
+            reimBurseMentService.submit(reimBurseMent);
             System.out.println("提交成功！");
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             System.out.println("注册失败！" + e.getClass().getSimpleName());
             System.out.println(e.getMessage());
         }
@@ -40,9 +39,9 @@ public class ReimBurseMentServiceTests {
     public void deleteById() {
         try {
             Integer id = 4;
-            iReimBurseMentService.deleteById(id);
+            reimBurseMentService.deleteById(id);
             System.out.println("信息删除成功");
-        } catch (ServiceException e) {
+        } catch (Exception e) {
             System.out.println("信息删除失败！" + e.getClass().getSimpleName());
             System.out.println(e.getMessage());
         }
@@ -51,7 +50,7 @@ public class ReimBurseMentServiceTests {
     @Test
     public void getById() {
         Integer id = 5;
-        ReimBurseMent result = iReimBurseMentService.getById(id);
+        ReimBurseMent result = reimBurseMentService.getById(id);
         System.out.println(result);
     }
 }

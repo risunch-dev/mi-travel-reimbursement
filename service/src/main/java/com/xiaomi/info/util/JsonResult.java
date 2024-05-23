@@ -1,4 +1,4 @@
-package com.cy.xm_travel_reimbursement.util;
+package com.xiaomi.info.util;
 
 import java.io.Serializable;
 

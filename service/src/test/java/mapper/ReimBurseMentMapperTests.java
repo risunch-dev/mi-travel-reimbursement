@@ -1,19 +1,20 @@
-package com.cy.xm_travel_reimbursement.mapper;
+package mapper;
 
-import com.cy.xm_travel_reimbursement.entity.ReimBurseMent;
-import com.cy.xm_travel_reimbursement.entity.TripApply;
+import com.xiaomi.info.mapper.ReimBurseMentMapper;
+import com.xiaomi.info.model.ReimBurseMent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ReimBurseMentMapperTests {
-    @Autowired
+    @Resource
     private ReimBurseMentMapper reimBurseMentMapper;
     @Test
     public void insert() {
@@ -24,9 +25,9 @@ public class ReimBurseMentMapperTests {
         reimBurseMent.setAmount(100);
         reimBurseMent.setItem("出差");
         Date time = new Date();
-        reimBurseMent.setCreatedTime(time);
+        reimBurseMent.setCreateTime(time);
         reimBurseMent.setUpdateTime(time);
-        reimBurseMent.setCreatedUser("admin");
+        reimBurseMent.setCreateUser("admin");
         reimBurseMent.setUpdateUser("admin");
         reimBurseMent.setApplyTime("123");
         Integer rows = reimBurseMentMapper.insert(reimBurseMent);

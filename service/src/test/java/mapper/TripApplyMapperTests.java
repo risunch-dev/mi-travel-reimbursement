@@ -1,32 +1,34 @@
-package com.cy.xm_travel_reimbursement.mapper;
+package mapper;
 
-import com.cy.xm_travel_reimbursement.entity.TripApply;
+import com.xiaomi.info.mapper.TripApplyMapper;
+import com.xiaomi.info.model.TripApply;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TripApplyMapperTests {
-    @Autowired
+    @Resource
     private TripApplyMapper tripApplyMapper;
     @Test
     public void insert() {
         TripApply tripApply = new TripApply();
-        tripApply.setTitle("test005");
+        tripApply.setName("test005");
         tripApply.setAttachMent("www");
         tripApply.setTravelCity("上海-北京");
         tripApply.setStatus(1);
         tripApply.setDays(2);
         tripApply.setAmount(2*300);
         Date time = new Date();
-        tripApply.setCreatedTime(time);
+        tripApply.setCreateTime(time);
         tripApply.setUpdateTime(time);
-        tripApply.setCreatedUser("test001");
+        tripApply.setCreateUser("test001");
         tripApply.setUpdateUser("test001");
         Integer rows = tripApplyMapper.insert(tripApply);
         System.out.println("rows=" + rows);
