@@ -32,4 +32,11 @@ public interface ProcessService extends IService<XmProcess> {
      * @param userId
      */
     void startUp(ProcessFormRequest processFormRequest, Long userId);
+
+    /**
+     * 查询待处理任务列表
+     * @param pageParam
+     * @return
+     */
+    IPage<ProcessResponse> findPending(Page<XmProcess> pageParam, Long userId);
 }
