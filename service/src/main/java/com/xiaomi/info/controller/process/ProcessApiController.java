@@ -1,5 +1,7 @@
 package com.xiaomi.info.controller.process;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xiaomi.info.model.process.XmProcess;
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.model.process.XmProcessType;
 import com.xiaomi.info.process.request.ProcessFormRequest;
@@ -68,5 +70,19 @@ public class ProcessApiController {
     public Response<XmProcessTemplate> get(@PathVariable Long processTemplateId) {
         XmProcessTemplate xmProcessTemplate = processTemplateService.getById(processTemplateId);
         return Response.success(xmProcessTemplate);
+    }
+
+    /**
+     * 待处理查询
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/findPending/{page}/{limit}")
+    public Response findPending(@PathVariable Long page,
+                                @PathVariable Long limit,
+                                @PathVariable Long userId) {
+        Page<XmProcess> pageParam = new Page<>(page, limit);
+        return Response.success(processService.findPending(pageParam, userId));
     }
 }
