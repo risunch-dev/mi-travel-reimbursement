@@ -8,6 +8,8 @@ import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessResponse;
 import com.xiaomi.info.process.request.ProcessQueryRequest;
 
+import java.util.Map;
+
 /**
  * ClassName: ProcessService
  * Package: com.xiaomi.info.service
@@ -39,4 +41,15 @@ public interface ProcessService extends IService<XmProcess> {
      * @return
      */
     IPage<ProcessResponse> findPending(Page<XmProcess> pageParam, Long userId);
+
+
+    /**
+     * 审批详情
+     * @param id
+     * @return
+     */
+    Map<String, Object> showDetail(Long id);
+
+
+
 }
