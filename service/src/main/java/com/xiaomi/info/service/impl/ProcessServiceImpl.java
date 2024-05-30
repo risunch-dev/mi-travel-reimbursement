@@ -2,12 +2,14 @@ package com.xiaomi.info.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaomi.info.mapper.XmProcessMapper;
 import com.xiaomi.info.model.XmUser;
 import com.xiaomi.info.model.process.XmProcess;
+import com.xiaomi.info.model.process.XmProcessRecord;
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessResponse;
@@ -188,6 +190,42 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         IPage<ProcessResponse> page = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
         page.setRecords(processList);
         return page;
+    }
+
+    /**
+     * 查看审批详情
+     * @param id
+     * @return
+     */
+    @Override
+    public Map<String, Object> showDetail(Long id) {
+
+        XmProcess xmProcess = this.getById(id);
+
+        List<XmProcessRecord> processRecordList = processRecordService.list(new LambdaQueryWrapper<XmProcessRecord>()
+                .eq(XmProcessRecord::getProcessId, id));
+        XmProcessTemplate processTemplate = processTemplateService.getById(xmProcess.getProcessTemplateId());
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("process", xmProcess);
+        map.put("processRecordList", processRecordList);
+        map.put("processTemplate", processTemplate);
+
+        // 计算当前用户是否可以审批
+        // 能够查看详情的用户不是都能审批，审批后也不能重复审批
+        boolean isApprove = false;
+        List<Task> taskList = this.getCurrentTaskList(xmProcess.getProcessInstanceId());
+        if (!CollectionUtils.isEmpty(taskList)) {
+            for(Task task : taskList) {
+                XmUser xmUser = userService.getById(id);
+                if(task.getAssignee().equals(xmUser.getName())) {
+                    isApprove = true;
+                }
+            }
+        }
+        map.put("isApprove", isApprove);
+        return map;
+
     }
 
     /**

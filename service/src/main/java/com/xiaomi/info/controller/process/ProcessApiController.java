@@ -5,6 +5,7 @@ import com.xiaomi.info.model.process.XmProcess;
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.model.process.XmProcessType;
 import com.xiaomi.info.process.request.ProcessFormRequest;
+import com.xiaomi.info.process.response.ProcessDetailResponse;
 import com.xiaomi.info.process.response.ProcessTypeListResponse;
 import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.ProcessService;
@@ -85,4 +86,19 @@ public class ProcessApiController {
         Page<XmProcess> pageParam = new Page<>(page, limit);
         return Response.success(processService.findPending(pageParam, userId));
     }
+
+    /**
+     * 获取审批详情
+     * @param id
+     * @return
+     */
+    @GetMapping("showDetail/{id}")
+    public Response<ProcessDetailResponse> showDetail(@PathVariable Long id) {
+        ProcessDetailResponse response = ProcessDetailResponse.builder()
+                .map(processService.showDetail(id))
+                .build();
+        return Response.success(response);
+    }
+
+
 }
