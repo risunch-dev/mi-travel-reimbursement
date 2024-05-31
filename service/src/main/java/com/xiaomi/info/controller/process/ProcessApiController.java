@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xiaomi.info.model.process.XmProcess;
 import com.xiaomi.info.model.process.XmProcessTemplate;
 import com.xiaomi.info.model.process.XmProcessType;
+import com.xiaomi.info.process.request.ProcessApprovalRequest;
 import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessDetailResponse;
 import com.xiaomi.info.process.response.ProcessTypeListResponse;
@@ -98,6 +99,17 @@ public class ProcessApiController {
                 .map(processService.showDetail(id))
                 .build();
         return Response.success(response);
+    }
+
+    /**
+     * 审批
+     * @param request
+     * @return
+     */
+    @PostMapping("approve")
+    public Response approve(@RequestBody ProcessApprovalRequest request) {
+        processService.approve(request);
+        return Response.success();
     }
 
 

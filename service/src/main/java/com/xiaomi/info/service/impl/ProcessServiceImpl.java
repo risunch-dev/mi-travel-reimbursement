@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xiaomi.info.mapper.XmProcessMapper;
+import com.xiaomi.info.mapper.XmProcessRecordMapper;
 import com.xiaomi.info.model.XmUser;
 import com.xiaomi.info.model.process.XmProcess;
 import com.xiaomi.info.model.process.XmProcessRecord;
 import com.xiaomi.info.model.process.XmProcessTemplate;
+import com.xiaomi.info.process.request.ProcessApprovalRequest;
 import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessResponse;
 import com.xiaomi.info.process.request.ProcessQueryRequest;
@@ -19,6 +21,10 @@ import com.xiaomi.info.service.ProcessService;
 import com.xiaomi.info.service.ProcessTemplateService;
 import com.xiaomi.info.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.bpmn.model.EndEvent;
+import org.activiti.bpmn.model.FlowNode;
+import org.activiti.bpmn.model.SequenceFlow;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -55,6 +61,9 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
 
     @Autowired
     private XmProcessMapper xmProcessMapper;
+
+    @Autowired
+    private XmProcessRecordMapper xmProcessRecordMapper;
 
     @Autowired
     private UserService userService;
@@ -226,6 +235,98 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         map.put("isApprove", isApprove);
         return map;
 
+    }
+
+    /**
+     * 审批
+     * @param request
+     */
+    @Override
+    public void approve(ProcessApprovalRequest request) {
+        Map<String, Object> map = taskService.getVariables(request.getTaskId());
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            log.info("key={}, value={}", entry.getKey(), entry.getValue());
+        }
+        String taskId = request.getTaskId();
+        if (request.getStatus() == 1) {
+            // 已通过
+            Map<String, Object> variables = new HashMap<String, Object>();
+            taskService.complete(taskId, variables);
+        } else {
+            // 驳回
+            this.endTask(taskId);
+        }
+        String description = request.getStatus().intValue() == 1 ? "已通过" : "驳回";
+
+        XmProcessRecord xmProcessRecord = xmProcessRecordMapper.selectOne(new LambdaQueryWrapper<XmProcessRecord>()
+                .eq(XmProcessRecord::getProcessId, request.getProcessId()));
+        processRecordService.record(request.getProcessId(), request.getStatus(), description, xmProcessRecord.getOperateUserId());
+
+        // 计算下一个审批人
+        XmProcess xmProcess = this.getById(request.getProcessId());
+        List<Task> taskList = this.getCurrentTaskList(xmProcess.getProcessInstanceId());
+        if (!CollectionUtils.isEmpty(taskList)) {
+            List<String> assigneeList = new ArrayList<>();
+            for(Task task : taskList) {
+                XmUser xmUser = userService.getByUserName(task.getAssignee());
+                assigneeList.add(xmUser.getName());
+
+                // 推送消息给下一个审批人
+            }
+            xmProcess.setDescription("等待" + StringUtils.join(assigneeList.toArray(), ",") + "审批");
+            xmProcess.setStatus(1);
+        } else {
+            if(request.getStatus().intValue() == 1) {
+                xmProcess.setDescription("审批完成（同意）");
+                xmProcess.setStatus(2);
+            } else {
+                xmProcess.setDescription("审批完成（拒绝）");
+                xmProcess.setStatus(-1);
+            }
+        }
+        //推送消息给申请人
+        this.updateById(xmProcess);
+
+    }
+
+    /**
+     * 结束流程
+     * @param taskId
+     */
+    private void endTask(String taskId) {
+        // 当前任务
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
+        List endEventList = bpmnModel.getMainProcess().findFlowElementsOfType(EndEvent.class);
+
+        // 并行任务可能为null
+        if(CollectionUtils.isEmpty(endEventList)) {
+            return;
+        }
+        FlowNode endFlowNode = (FlowNode)endEventList.get(0);
+        FlowNode currentFlowNode = (FlowNode)bpmnModel.getMainProcess().getFlowElement(task.getTaskDefinitionKey());
+
+        // 临时保存当前活动的原始方向
+        List originalSequenceFlowList = new ArrayList<>();
+        originalSequenceFlowList.addAll(currentFlowNode.getOutgoingFlows());
+
+        // 清理活动方向
+        currentFlowNode.getOutgoingFlows().clear();
+
+        // 建立新方向
+        SequenceFlow newSequenceFlow = new SequenceFlow();
+        newSequenceFlow.setId("newSequenceFlowId");
+        newSequenceFlow.setSourceFlowElement(currentFlowNode);
+        newSequenceFlow.setTargetFlowElement(endFlowNode);
+        List newSequenceFlowList = new ArrayList<>();
+        newSequenceFlowList.add(newSequenceFlow);
+
+        // 当前节点指向新的方向
+        currentFlowNode.setOutgoingFlows(newSequenceFlowList);
+
+        // 完成当前任务
+        taskService.complete(task.getId());
     }
 
     /**
