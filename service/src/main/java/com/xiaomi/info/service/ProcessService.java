@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xiaomi.info.model.process.XmProcess;
+import com.xiaomi.info.process.request.ProcessApprovalRequest;
 import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessResponse;
 import com.xiaomi.info.process.request.ProcessQueryRequest;
@@ -51,5 +52,9 @@ public interface ProcessService extends IService<XmProcess> {
     Map<String, Object> showDetail(Long id);
 
 
-
+    /**
+     * 审批
+     * @param request
+     */
+    void approve(ProcessApprovalRequest request);
 }
