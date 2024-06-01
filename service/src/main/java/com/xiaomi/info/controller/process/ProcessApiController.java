@@ -112,5 +112,19 @@ public class ProcessApiController {
         return Response.success();
     }
 
+    /**
+     * 查看已处理审批
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/findProcessed/{page}/{limit}")
+    public Response findProcessed(@PathVariable Long page,
+                                  @PathVariable Long limit,
+                                  @PathVariable Long userId) {
+        Page<XmProcess> pageParam = new Page<>(page, limit);
+        return Response.success(processService.findProcessed(pageParam, userId));
+    }
+
 
 }
