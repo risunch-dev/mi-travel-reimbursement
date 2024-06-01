@@ -25,9 +25,12 @@ import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowNode;
 import org.activiti.bpmn.model.SequenceFlow;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
@@ -82,6 +85,9 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
 
     @Autowired
     private ProcessRecordService processRecordService;
+
+    @Autowired
+    private HistoryService historyService;
 
     @Override
     public IPage<ProcessResponse> selectPage(Page<ProcessResponse> pageParam, ProcessQueryRequest processQueryRequest) {
@@ -287,6 +293,37 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         //推送消息给申请人
         this.updateById(xmProcess);
 
+    }
+
+    /**
+     * 查看已处理审批，分页查询
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public IPage<ProcessResponse> findProcessed(Page<XmProcess> pageParam, Long userId) {
+        // 根据当前人的ID查询
+        HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery()
+                .taskAssignee(userService.getById(userId).getName())
+                .finished()
+                .orderByTaskCreateTime()
+                .desc();
+        List<HistoricTaskInstance> list = query.listPage((int) ((pageParam.getCurrent() - 1) * pageParam.getSize()), (int) pageParam.getSize());
+        long totalCount = query.count();
+
+        List<ProcessResponse> processList = new ArrayList<>();
+        for (HistoricTaskInstance item : list) {
+            String processInstanceId = item.getProcessInstanceId();
+            XmProcess xmProcess = this.getOne(new LambdaQueryWrapper<XmProcess>()
+                    .eq(XmProcess::getProcessInstanceId, processInstanceId));
+            ProcessResponse processVo = new ProcessResponse();
+            BeanUtils.copyProperties(xmProcess, processVo);
+            processVo.setTaskId("0");
+            processList.add(processVo);
+        }
+        IPage<ProcessResponse> page = new Page<>(pageParam.getCurrent(), pageParam.getSize(), totalCount);
+        page.setRecords(processList);
+        return page;
     }
 
     /**

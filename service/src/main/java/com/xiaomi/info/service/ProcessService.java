@@ -57,4 +57,11 @@ public interface ProcessService extends IService<XmProcess> {
      * @param request
      */
     void approve(ProcessApprovalRequest request);
+
+    /**
+     * 查看已处理审批
+     * @param pageParam
+     * @return
+     */
+    IPage<ProcessResponse> findProcessed(Page<XmProcess> pageParam, Long userId);
 }
