@@ -7,6 +7,7 @@ import com.xiaomi.info.model.process.XmProcessType;
 import com.xiaomi.info.process.request.ProcessApprovalRequest;
 import com.xiaomi.info.process.request.ProcessFormRequest;
 import com.xiaomi.info.process.response.ProcessDetailResponse;
+import com.xiaomi.info.process.response.ProcessResponse;
 import com.xiaomi.info.process.response.ProcessTypeListResponse;
 import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.ProcessService;
@@ -124,6 +125,20 @@ public class ProcessApiController {
                                   @PathVariable Long userId) {
         Page<XmProcess> pageParam = new Page<>(page, limit);
         return Response.success(processService.findProcessed(pageParam, userId));
+    }
+
+    /**
+     * 已发起
+     * @param page
+     * @param limit
+     * @return
+     */
+    @GetMapping("/findStarted/{page}/{limit}")
+    public Response findStarted(@PathVariable Long page,
+                                @PathVariable Long limit,
+                                @PathVariable Long userId) {
+        Page<ProcessResponse> pageParam = new Page<>(page, limit);
+        return Response.success(processService.findStarted(pageParam, userId));
     }
 
 

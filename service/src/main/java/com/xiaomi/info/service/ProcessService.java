@@ -64,4 +64,11 @@ public interface ProcessService extends IService<XmProcess> {
      * @return
      */
     IPage<ProcessResponse> findProcessed(Page<XmProcess> pageParam, Long userId);
+
+    /**
+     * 已发起
+     * @param pageParam
+     * @return
+     */
+    IPage<ProcessResponse> findStarted(Page<ProcessResponse> pageParam ,Long userId);
 }

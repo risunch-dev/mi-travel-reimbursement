@@ -327,6 +327,22 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
     }
 
     /**
+     * 已发起
+     * @param pageParam
+     * @return
+     */
+    @Override
+    public IPage<ProcessResponse> findStarted(Page<ProcessResponse> pageParam, Long userId) {
+        ProcessQueryRequest request = new ProcessQueryRequest();
+        request.setUserId(userId);
+        IPage<ProcessResponse> page = xmProcessMapper.selectPage(pageParam, request, null);
+        for (ProcessResponse response : page.getRecords()) {
+            response.setTaskId("0");
+        }
+        return page;
+    }
+
+    /**
      * 结束流程
      * @param taskId
      */
