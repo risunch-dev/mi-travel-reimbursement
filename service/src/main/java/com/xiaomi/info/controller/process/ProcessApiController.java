@@ -13,9 +13,9 @@ import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.ProcessService;
 import com.xiaomi.info.service.ProcessTemplateService;
 import com.xiaomi.info.service.ProcessTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -31,13 +31,13 @@ import java.util.List;
 @RequestMapping("/api/process")
 public class ProcessApiController {
 
-    @Autowired
+    @Resource
     private ProcessTypeService processTypeService;
 
-    @Autowired
+    @Resource
     private ProcessTemplateService processTemplateService;
 
-    @Autowired
+    @Resource
     private ProcessService processService;
 
     /**
