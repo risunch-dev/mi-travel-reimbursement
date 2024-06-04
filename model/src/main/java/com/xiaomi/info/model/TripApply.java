@@ -14,7 +14,7 @@ public class TripApply{
     private String name;
     private Integer status;
     private String travelCity;
-    private String attachMent;
+    private String attachment;
     private Integer days;
     private Integer amount;
     private Date createTime;

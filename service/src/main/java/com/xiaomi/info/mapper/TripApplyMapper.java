@@ -1,30 +1,29 @@
 package com.xiaomi.info.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xiaomi.info.model.TripApply;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
 
 @Mapper
-public interface TripApplyMapper {
+public interface TripApplyMapper extends BaseMapper<TripApply> {
     /**
      * 插入申请数据
      * @param tripApply 申请单
      * @return 受影响的行数
      */
-    Integer insert(TripApply tripApply);
-
     TripApply getByName(String name);
     Integer updateDetailById(
-            Integer id,
+            Long id,
             String title,
             Integer days,
             String travelCity,
-            String attachMent,
+            String attachment,
             String updateUser,
             Date updateTime);
 
-    TripApply findById(Integer id);
+    TripApply findById(Long id);
 
-    Integer deleteById(Integer id);
+    Integer deleteById(Long id);
 }

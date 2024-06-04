@@ -1,10 +1,9 @@
 package mapper;
 
-import com.xiaomi.info.mapper.ReimBurseMentMapper;
-import com.xiaomi.info.model.ReimBurseMent;
+import com.xiaomi.info.mapper.ReimbursementMapper;
+import com.xiaomi.info.model.Reimbursement;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -15,13 +14,13 @@ import java.util.Date;
 @SpringBootTest
 public class ReimBurseMentMapperTests {
     @Resource
-    private ReimBurseMentMapper reimBurseMentMapper;
+    private ReimbursementMapper reimBurseMentMapper;
     @Test
     public void insert() {
-        ReimBurseMent reimBurseMent = new ReimBurseMent();
+        Reimbursement reimBurseMent = new Reimbursement();
         reimBurseMent.setName("test002");
         reimBurseMent.setStatus(1);
-        reimBurseMent.setAttachMent("www");
+        reimBurseMent.setAttachment("www");
         reimBurseMent.setAmount(100);
         reimBurseMent.setItem("出差");
         Date time = new Date();
@@ -44,16 +43,16 @@ public class ReimBurseMentMapperTests {
 
     @Test
     public void updateDetailById() {
-        Integer id = 1;
+        Long id = 1L;
         String item = "test007";
         Integer amount = 1000;
         String updateUser = "管理员";
         Date updateTime = new Date();
-        String attachMent = "qq";
-        Integer rows = reimBurseMentMapper.updateDetailById(id,
+        String attachment = "qq";
+        Long rows = reimBurseMentMapper.updateDetailById(id,
                 item,
                 amount,
-                attachMent,
+                attachment,
                 updateUser,
                 updateTime);
         System.out.println("rows=" + rows);
@@ -61,14 +60,14 @@ public class ReimBurseMentMapperTests {
 
    @Test
     public void findById() {
-        Integer id = 1;
-        ReimBurseMent result = reimBurseMentMapper.findById(id);
+        Long id = 1L;
+        Reimbursement result = reimBurseMentMapper.findById(id);
         System.out.println(result);
     }
 
    @Test
     public void deleteById() {
-        Integer id = 5;
+        Long id = 5L;
         Integer result = reimBurseMentMapper.deleteById(id);
         System.out.println(result);
     }

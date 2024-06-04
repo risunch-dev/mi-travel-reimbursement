@@ -4,7 +4,6 @@ import com.xiaomi.info.mapper.TripApplyMapper;
 import com.xiaomi.info.model.TripApply;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -20,7 +19,7 @@ public class TripApplyMapperTests {
     public void insert() {
         TripApply tripApply = new TripApply();
         tripApply.setName("test005");
-        tripApply.setAttachMent("www");
+        tripApply.setAttachment("www");
         tripApply.setTravelCity("上海-北京");
         tripApply.setStatus(1);
         tripApply.setDays(2);
@@ -44,7 +43,7 @@ public class TripApplyMapperTests {
 
     @Test
     public void updateDetailById() {
-        Integer id = 7;
+        Long id = 7L;
         String title = "test008";
         String updateUser = "管理员";
         Date updateTime = new Date();
@@ -63,14 +62,14 @@ public class TripApplyMapperTests {
 
     @Test
     public void findById() {
-        Integer uid = 8;
+        Long uid = 8L;
         TripApply result = tripApplyMapper.findById(uid);
         System.out.println(result);
     }
 
     @Test
     public void deleteById() {
-        Integer id = 7;
+        Long id = 7L;
         Integer result = tripApplyMapper.deleteById(id);
         System.out.println(result);
     }

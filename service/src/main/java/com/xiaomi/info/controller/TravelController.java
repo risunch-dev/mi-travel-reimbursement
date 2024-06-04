@@ -35,7 +35,7 @@ public class TravelController {
     }
 
     @RequestMapping("{id}/change_detail")
-    public JsonResult<String> changeDetail(@PathVariable("id") Integer id, String name, Integer days, String travelCity, String attachMent) {
+    public JsonResult<String> changeDetail(@PathVariable("id") Long id, String name, Integer days, String travelCity, String attachMent) {
 
         tripApplyService.changeDetail(id,name,days,attachMent,travelCity);
         // 返回
@@ -43,7 +43,7 @@ public class TravelController {
     }
 
     @RequestMapping("{id}/delete")
-    public JsonResult<String> delete(@PathVariable("id") Integer id) {
+    public JsonResult<String> delete(@PathVariable("id") Long id) {
 
         tripApplyService.deleteById(id);
         // 返回
@@ -51,7 +51,7 @@ public class TravelController {
     }
 
     @RequestMapping("{id}/detail")
-    public JsonResult<TripApply> get(@PathVariable("id") Integer id) {
+    public JsonResult<TripApply> get(@PathVariable("id") Long id) {
 
         TripApply result = tripApplyService.getById(id);
         // 返回

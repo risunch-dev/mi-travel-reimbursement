@@ -1,19 +1,20 @@
 package com.xiaomi.info.service.impl;
 
-import com.xiaomi.info.mapper.ReimBurseMentMapper;
-import com.xiaomi.info.model.ReimBurseMent;
-import com.xiaomi.info.service.ReimBurseMentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.xiaomi.info.mapper.ReimbursementMapper;
+import com.xiaomi.info.model.Reimbursement;
+import com.xiaomi.info.service.ReimbursementService;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 @Service
-public class ReimBurseMentImpl implements ReimBurseMentService {
+public class ReimbursementImpl implements ReimbursementService {
 
-    @Autowired
-    private ReimBurseMentMapper reimBurseMentMapper;
+    @Resource
+    private ReimbursementMapper reimBurseMentMapper;
+
     @Override
-    public void submit(ReimBurseMent reimBurseMent) {
+    public void submit(Reimbursement reimBurseMent) {
         Date now = new Date();
         String name = reimBurseMent.getName();
         reimBurseMent.setCreateTime(now);
@@ -29,15 +30,15 @@ public class ReimBurseMentImpl implements ReimBurseMentService {
     }
 
     @Override
-    public void changeDetail(Integer id, String item, String attachMent, Integer amount) {
-        ReimBurseMent result = reimBurseMentMapper.findById(id);
+    public void changeDetail(Long id, String item, String attachment, Integer amount) {
+        Reimbursement result = reimBurseMentMapper.findById(id);
         /*if(result == null)
         {
             throw new UserNotFoundException("用户数据不存在");
         }*/
         String name = result.getName();
         Date now = new Date();
-        Integer rows = reimBurseMentMapper.updateDetailById(id,item,amount,attachMent,name,now);
+        Long rows = reimBurseMentMapper.updateDetailById(id,item,amount,attachment,name,now);
         /*if (rows != 1) {
             // 是：插入数据时出现某种错误，则抛出InsertException异常
             throw new InsertException("修改信息出现未知错误");
@@ -45,8 +46,8 @@ public class ReimBurseMentImpl implements ReimBurseMentService {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        ReimBurseMent result = reimBurseMentMapper.findById(id);
+    public void deleteById(Long id) {
+        Reimbursement result = reimBurseMentMapper.findById(id);
         /*if(result == null)
         {
             throw new UserNotFoundException("用户数据不存在");
@@ -59,7 +60,7 @@ public class ReimBurseMentImpl implements ReimBurseMentService {
     }
 
     @Override
-    public ReimBurseMent getById(Integer id) {
+    public Reimbursement getById(Long id) {
         return reimBurseMentMapper.findById(id);
     }
 

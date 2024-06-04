@@ -34,7 +34,7 @@ public class TripApplyServiceImpl implements TripApplyService {
     }
 
     @Override
-    public void changeDetail(Integer id, String title, Integer days,String attachMent, String travelCity) {
+    public void changeDetail(Long id, String title, Integer days,String attachMent, String travelCity) {
         TripApply result = tripApplyMapper.findById(id);
         /*if(result == null)
         {
@@ -49,7 +49,7 @@ public class TripApplyServiceImpl implements TripApplyService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         TripApply result = tripApplyMapper.findById(id);
         /*if(result == null)
         {
@@ -63,7 +63,7 @@ public class TripApplyServiceImpl implements TripApplyService {
     }
 
     @Override
-    public TripApply getById(Integer id) {
+    public TripApply getById(Long id) {
         return tripApplyMapper.findById(id);
     }
 

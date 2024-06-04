@@ -8,16 +8,16 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReimBurseMent {
+public class Reimbursement {
 
-    private Integer id;
+    private Long id;
     private String item;
 
     private String name;
 
     private Integer amount;
 
-    private String attachMent;
+    private String attachment;
 
     private Integer status;
 
