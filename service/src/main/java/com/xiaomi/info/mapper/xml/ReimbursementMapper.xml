@@ -3,13 +3,13 @@
        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.cy.xm_travel_reimbursement.mapper.ReimBurseMentMapper">
-<resultMap id="ReimBurseMentMap" type="com.cy.xm_travel_reimbursement.entity.ReimBurseMent">
+<mapper namespace="com.xiaomi.info.mapper.ReimbursementMapper">
+<resultMap id="ReimbursementMapper" type="com.xiaomi.info.model.Reimbursement">
     <id column="id" property="id"/>
     <result column="apply_time" property="applyTime"/>
-    <result column="attachment" property="attachMent"/>
-    <result column="create_time" property="createdTime"/>
-    <result column="create_user" property="createdUser"/>
+    <result column="attachment" property="attachment"/>
+    <result column="create_time" property="createTime"/>
+    <result column="create_user" property="createUser"/>
     <result column="update_time" property="updateTime"/>
     <result column="update_user" property="updateUser"/>
 </resultMap>
@@ -17,9 +17,9 @@
 <!-- 插入用户数据：Integer insert(User user)-->
 <insert id="insert" useGeneratedKeys="true" keyProperty="id">
     INSERT INTO
-    xm_reimbursement_plan (name,status,item,amount,apply_time,attach_ment,create_time, create_user, update_time, update_user)
+    xm_reimbursement_plan (name,status,item,amount,apply_time,attachment,create_time, create_user, update_time, update_user)
     VALUES
-    (#{name},#{status},#{item},#{amount},#{applyTime},#{attachMent} ,#{createdTime}, #{createdUser}, #{updateTime}, #{updateUser})
+    (#{name},#{status},#{item},#{amount},#{applyTime},#{attachment} ,#{createdTime}, #{createdUser}, #{updateTime}, #{updateUser})
 </insert>
 
 <!-- 根据用户名查询用户数据：User findByName(String name)
@@ -38,14 +38,14 @@
         SET
             item = #{item},
             amount = #{amount},
-            attach_ment = #{attachMent},
+            attachment = #{attachment},
             update_user = #{updateUser},
             update_time = #{updateTime}
         WHERE
             id = #{id}
  </update>
 
- <select id="findById" resultMap="ReimBurseMentMap">
+ <select id="findById" resultMap="ReimbursementMapper">
         SELECT
             *
         FROM

@@ -6,11 +6,11 @@ public interface TripApplyService {
 
         void submit(TripApply tripApply);
 
-        void changeDetail(Integer id, String title, Integer days,String attachMent, String travelCity);
+        void changeDetail(Long id, String title, Integer days,String attachMent, String travelCity);
 
-        void deleteById(Integer id);
+        void deleteById(Long id);
 
-        TripApply getById(Integer id);
+        TripApply getById(Long id);
 
 
 }

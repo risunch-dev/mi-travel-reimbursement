@@ -43,6 +43,11 @@ public class ProcessTravelController {
         return Response.success(Boolean.TRUE);
     }
 
+    /**
+     * 查看个人代办任务
+     * @param name 用户名称
+     * @return
+     */
     @PostMapping("/findTaskList")
     public Response<Boolean> findTaskList(String name) {
         processTravelService.findTaskList(name);
