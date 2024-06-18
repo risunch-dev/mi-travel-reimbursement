@@ -9,8 +9,9 @@ import com.xiaomi.info.mapper.TripRecordMapper;
 import com.xiaomi.info.mapper.XmUserMapper;
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.model.XmUser;
-import com.xiaomi.info.service.ITripRecordService;
-import com.xiaomi.info.vo.TaskVO;
+import com.xiaomi.info.service.TripRecordService;
+import com.xiaomi.info.travel.response.TaskResponse;
+import com.xiaomi.info.travel.request.ProcessApproveRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -32,7 +33,7 @@ import java.util.*;
  */
 @Slf4j
 @Service
-public class TripRecordServiceImpl implements ITripRecordService {
+public class TripRecordServiceImpl implements TripRecordService {
 
     @Resource
     private TripRecordMapper tripRecordMapper;
@@ -49,8 +50,13 @@ public class TripRecordServiceImpl implements ITripRecordService {
     @Resource
     private TaskService taskService;
 
+    /**
+     * 启动流程实例
+     * @param id 差旅申请id
+     * @return
+     */
     @Override
-    public void submit(Long id) {
+    public Boolean submit(Long id) {
         TripApply tripApply = tripApplyMapper.selectById(id);
         if(tripApply == null) {
             log.error("没有对应的差旅申请,id={}", id);
@@ -88,10 +94,16 @@ public class TripRecordServiceImpl implements ITripRecordService {
         System.out.println("instanceID:"+task.getProcessInstanceId()+",taskID:"+task.getId()+",name:"+task.getName()+",assignee:"+task.getAssignee());
         //如果任务对象为空,则流程执行结束
         System.out.println("----------------------------");
+        return true;
     }
 
+    /**
+     * 查看个人代办任务
+     * @param id userId
+     * @return
+     */
     @Override
-    public List<TaskVO> Inquire(Long id) {
+    public List<TaskResponse> query(Long id) {
         XmUser xmUser = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
                 .eq(XmUser::getId, id));
         String name = xmUser.getName();
@@ -100,12 +112,12 @@ public class TripRecordServiceImpl implements ITripRecordService {
                 .taskAssignee(assignee)//只查询该任务负责人的任务
                 .list();
 
-        List<TaskVO> list1 = new ArrayList<>();
+        List<TaskResponse> list1 = new ArrayList<>();
         if (list == null)
             System.out.println("该用户没有待办请求");
         else {
             for (Task task : list) {
-                TaskVO tv = new TaskVO();
+                TaskResponse tv = new TaskResponse();
                 tv.setInstanceID(task.getProcessInstanceId());
                 tv.setName(task.getAssignee());
                 tv.setTaskId(task.getId());
@@ -117,43 +129,49 @@ public class TripRecordServiceImpl implements ITripRecordService {
         return list1;
     }
 
+    /**
+     * 审批通过
+     * @param request
+     * @return
+     */
     @Override
-    public Integer pass(Long id, String instanceID, String desc) {
-        return examine(id, instanceID, desc,"approval");
+    public Boolean approve(ProcessApproveRequest request) {
+        return examine(request.getId(), request.getInstanceId(), request.getDesc(), "approve");
 
     }
 
+    /**
+     * 审批驳回
+     * @param request
+     * @return
+     */
     @Override
-    public Integer turnDown(Long id, String instanceID, String desc) {
-        return examine(id, instanceID, desc,"reject");
+    public Boolean reject(ProcessApproveRequest request) {
+        return examine(request.getId(), request.getInstanceId(), request.getDesc(), "reject");
 
     }
 
-    private int examine(Long id, String instanceID, String desc,String command) {
+    private Boolean examine(Long id, String instanceID, String desc,String command) {
         XmUser xmUser = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
                 .eq(XmUser::getId, id));
-        String name = xmUser.getName();
-        String assignee = name;
+        String assignee = xmUser.getName();
         List<Task> list = taskService.createTaskQuery()
-                .taskAssignee(assignee)//只查询该任务负责人的任务
+                .taskAssignee(assignee)// 只查询该任务负责人的任务
                 .list();
-        if (list == null)
-        {
-            System.out.println("该用户没有待办请求");
-            return 0;
-        }
-        else {
+        if (list == null) {
+            log.error("该用户没有代办任务,userId={}", id);
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "该用户没有代办任务");
+        } else {
             for (Task task : list) {
                 if (instanceID.equals(task.getProcessInstanceId())) {
                     Map<String,Object> variables = new HashMap<>();
-                    variables.put("describtion", desc);
+                    variables.put("description", desc);
                     variables.put("outcome",command);
                     taskService.complete(task.getId(),variables);
-                    return 1;
+                    return true;
                 }
             }
-            return 0;
-
         }
+        return true;
     }
 }

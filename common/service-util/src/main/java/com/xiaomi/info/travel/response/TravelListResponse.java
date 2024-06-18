@@ -1,4 +1,4 @@
-package com.xiaomi.info.travel.reponse;
+package com.xiaomi.info.travel.response;
 
 import com.xiaomi.info.common.response.PageResponse;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * ClassName: TravelListResponse
- * Package: com.xiaomi.info.travel.reponse
+ * Package: com.xiaomi.info.travel.response
  * Description:
  *
  * @Author 朱安迪
