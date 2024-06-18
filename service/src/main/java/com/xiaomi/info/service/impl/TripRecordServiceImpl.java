@@ -10,11 +10,15 @@ import com.xiaomi.info.mapper.XmUserMapper;
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.model.XmUser;
 import com.xiaomi.info.service.TripRecordService;
+import com.xiaomi.info.travel.request.ProcessQueryListRequest;
+import com.xiaomi.info.travel.response.ProcessQueryListResponse;
 import com.xiaomi.info.travel.response.TaskResponse;
 import com.xiaomi.info.travel.request.ProcessApproveRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.stereotype.Service;
@@ -49,6 +53,9 @@ public class TripRecordServiceImpl implements TripRecordService {
 
     @Resource
     private TaskService taskService;
+
+    @Resource
+    private HistoryService historyService;
 
     /**
      * 启动流程实例
@@ -152,6 +159,39 @@ public class TripRecordServiceImpl implements TripRecordService {
     public Boolean reject(ProcessApproveRequest request) {
         return examine(request.getId(), request.getInstanceId(), request.getDesc(), "reject");
 
+    }
+
+    /**
+     * 查询已发起
+     * @param request
+     * @return
+     */
+    @Override
+    public ProcessQueryListResponse findStarted(ProcessQueryListRequest request) {
+        return null;
+    }
+
+    /**
+     * 查看已办理的流程
+     * @param id userId
+     * @return
+     */
+    @Override
+    public List<HistoricTaskInstance> findCompleteTaskList(Long id) {
+        XmUser xmUser = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
+                .eq(XmUser::getId, id));
+        String assignee = xmUser.getName();
+        List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
+                .taskAssignee(assignee)
+                .finished()
+                .list();
+        for (HistoricTaskInstance historicTaskInstance : list) {
+            log.info("流程实例id={}", historicTaskInstance.getProcessInstanceId());
+            log.info("任务id={}", historicTaskInstance.getId());
+            log.info("任务负责人：", historicTaskInstance.getAssignee());
+            log.info("任务名称：", historicTaskInstance.getName());
+        }
+        return list;
     }
 
     private Boolean examine(Long id, String instanceID, String desc,String command) {

@@ -3,17 +3,17 @@
   <process id="test1" name="test1" isExecutable="true">
     <startEvent id="sid-8FAEF60F-329E-42BC-B2CA-8BB6712116BF"/>
     <userTask id="sid-D87DB7BA-CD17-4C01-A378-FFCD7A7A6962" name="申请" activiti:assignee="朱安迪"/>
-    <userTask id="sid-865BE964-19E1-42E8-B93D-104DE28C0CC1" name="主管审批">
+    <userTask id="sid-865BE964-19E1-42E8-B93D-104DE28C0CC1" name="主管审批" activiti:assignee="张三">
       <extensionElements>
         <activiti:taskListener event="create" class="com.xiaomi.info.listener.SupervisorTaskListener"/>
       </extensionElements>
     </userTask>
-    <userTask id="sid-4819C848-3E53-4F38-8270-A328845EFD49" name="经理审批">
+    <userTask id="sid-4819C848-3E53-4F38-8270-A328845EFD49" name="经理审批" activiti:assignee="李四">
       <extensionElements>
         <activiti:taskListener event="create" class="com.xiaomi.info.listener.ManagerTaskListener"/>
       </extensionElements>
     </userTask>
-    <userTask id="sid-3C9E1985-C2A3-495C-9487-76E40A8BA1DB" name="财务审批">
+    <userTask id="sid-3C9E1985-C2A3-495C-9487-76E40A8BA1DB" name="财务审批" activiti:assignee="王五">
       <extensionElements>
         <activiti:taskListener event="create" class="com.xiaomi.info.listener.FinanceTaskListener"/>
       </extensionElements>
