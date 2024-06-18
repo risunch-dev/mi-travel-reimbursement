@@ -1,7 +1,10 @@
 package com.xiaomi.info.service;
 
+import com.xiaomi.info.travel.request.ProcessQueryListRequest;
+import com.xiaomi.info.travel.response.ProcessQueryListResponse;
 import com.xiaomi.info.travel.response.TaskResponse;
 import com.xiaomi.info.travel.request.ProcessApproveRequest;
+import org.activiti.engine.history.HistoricTaskInstance;
 
 import java.util.List;
 
@@ -43,4 +46,13 @@ public interface TripRecordService {
      * @return
      */
     Boolean reject(ProcessApproveRequest request);
+
+    ProcessQueryListResponse findStarted(ProcessQueryListRequest request);
+
+    /**
+     * 查看已办理的流程
+     * @param id
+     * @return
+     */
+    List<HistoricTaskInstance> findCompleteTaskList(Long id);
 }

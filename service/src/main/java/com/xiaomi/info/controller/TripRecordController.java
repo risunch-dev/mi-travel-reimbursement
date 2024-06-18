@@ -4,15 +4,18 @@ import com.xiaomi.info.common.enums.ErrorCodes;
 import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.TripRecordService;
+import com.xiaomi.info.travel.response.ProcessCompleteListResponse;
 import com.xiaomi.info.travel.response.ProcessQueryListResponse;
 import com.xiaomi.info.travel.request.ProcessApproveRequest;
 import com.xiaomi.info.travel.request.ProcessQueryListRequest;
 import com.xiaomi.info.travel.request.TravelDeleteRequest;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,7 +33,6 @@ public class TripRecordController {
 
     @Resource
     private TripRecordService tripRecordService;
-
     /**
      * 启动流程实例
      * @param request 差旅申请id
@@ -83,6 +85,32 @@ public class TripRecordController {
         checkTripRecordApproveParameters(request);
         Boolean result = tripRecordService.reject(request);
         return Boolean.TRUE.equals(result) ? Response.success(true) : Response.error("审批驳回失败");
+    }
+
+    /**
+     * 查看已办理的流程
+     */
+    @PostMapping("/findCompleteTaskList")
+    public Response<ProcessCompleteListResponse> findCompleteTaskList(@RequestBody ProcessQueryListRequest request) {
+        List<HistoricTaskInstance> list = tripRecordService.findCompleteTaskList(request.getId());
+        ProcessCompleteListResponse response = ProcessCompleteListResponse.builder()
+                .list(list)
+                .build();
+        return Response.success(response);
+    }
+
+    /**
+     * 查看已发起审批
+     * @param request
+     * @return
+     */
+    @PostMapping("/findStart")
+    public Response<ProcessCompleteListResponse> findStart(@RequestBody ProcessQueryListRequest request) {
+        List<HistoricTaskInstance> list = tripRecordService.findCompleteTaskList(request.getId());
+        ProcessCompleteListResponse response = ProcessCompleteListResponse.builder()
+                .list(list)
+                .build();
+        return Response.success(response);
     }
 
     /**
