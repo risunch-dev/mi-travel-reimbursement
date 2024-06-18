@@ -36,7 +36,7 @@ public class TripApplyServiceImpl implements TripApplyService {
                 apply.setUpdateTime(new Date());
                 apply.setUpdateUser(tripApply.getUpdateUser());
                 tripApplyMapper.updateById(apply);
-                return true;
+                return Boolean.TRUE;
             } else {
                 log.error("当前差旅申请已经存在,id={}", tripApply.getId());
                 throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前差旅申请已经存在");
@@ -47,7 +47,7 @@ public class TripApplyServiceImpl implements TripApplyService {
         tripApply.setAmount(tripApply.getDays() * 300);
         tripApply.setStatus(1);
         tripApplyMapper.insert(tripApply);
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -60,7 +60,7 @@ public class TripApplyServiceImpl implements TripApplyService {
         tripApply.setUpdateTime(new Date());
         tripApply.setAmount(tripApply.getDays() * 300);
         tripApplyMapper.updateById(tripApply);
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -77,7 +77,7 @@ public class TripApplyServiceImpl implements TripApplyService {
         tripApply.setStatus(0);
         tripApply.setUpdateTime(new Date());
         tripApplyMapper.updateById(tripApply);
-        return true;
+        return Boolean.TRUE;
     }
 
     /**

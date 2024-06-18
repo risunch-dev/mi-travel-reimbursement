@@ -94,7 +94,7 @@ public class TripRecordServiceImpl implements TripRecordService {
         System.out.println("instanceID:"+task.getProcessInstanceId()+",taskID:"+task.getId()+",name:"+task.getName()+",assignee:"+task.getAssignee());
         //如果任务对象为空,则流程执行结束
         System.out.println("----------------------------");
-        return true;
+        return Boolean.TRUE;
     }
 
     /**
@@ -168,10 +168,10 @@ public class TripRecordServiceImpl implements TripRecordService {
                     variables.put("description", desc);
                     variables.put("outcome",command);
                     taskService.complete(task.getId(),variables);
-                    return true;
+                    return Boolean.TRUE;
                 }
             }
         }
-        return true;
+        return Boolean.TRUE;
     }
 }
