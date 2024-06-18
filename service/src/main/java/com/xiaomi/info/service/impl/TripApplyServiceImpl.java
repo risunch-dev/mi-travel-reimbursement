@@ -1,11 +1,20 @@
 package com.xiaomi.info.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xiaomi.info.common.entity.PageResult;
 import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.common.enums.StatusEnum;
+import com.xiaomi.info.common.utils.DateUtils;
+import com.xiaomi.info.convertor.PageConverter;
 import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.mapper.TripApplyMapper;
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.service.TripApplyService;
+import com.xiaomi.info.travel.response.TravelDetailResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,19 +25,35 @@ public class TripApplyServiceImpl implements TripApplyService {
     @Resource
     private TripApplyMapper tripApplyMapper;
 
+    @Override
+    public PageResult<TripApply> list(String createUser, Integer pageNum, Integer pageSize) {
+        // 分页查询
+        Page<TripApply> searchPage = new Page<>(pageNum, pageSize);
+
+        LambdaQueryWrapper<TripApply> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(TripApply::getStatus, StatusEnum.ENABLE.getCode())
+                .orderByAsc(TripApply::getId);
+        if (StringUtils.isNoneBlank(createUser)) {
+            wrapper.eq(TripApply::getCreateUser, createUser);
+        }
+        Page<TripApply> tripApplyPage = tripApplyMapper.selectPage(searchPage, wrapper);
+
+        return PageConverter.transform(tripApplyPage);
+    }
+
     /**
      * 创建差旅申请
      * @param tripApply
      * @return
      */
     @Override
-    public Boolean create(TripApply tripApply) {
+    public Long create(TripApply tripApply) {
         TripApply apply = tripApplyMapper.selectById(tripApply.getId());
         // 如果id存在，则判断status
         if(apply != null) {
-            if(apply.getStatus() == 0) {
+            if(apply.getStatus() == StatusEnum.DISABLE.getCode()) {
                 apply.setName(tripApply.getName());
-                apply.setStatus(1);
+                apply.setStatus(StatusEnum.ENABLE.getCode());
                 apply.setTravelCity(tripApply.getTravelCity());
                 apply.setAttachment(apply.getAttachment());
                 apply.setDays(tripApply.getDays());
@@ -36,7 +61,7 @@ public class TripApplyServiceImpl implements TripApplyService {
                 apply.setUpdateTime(new Date());
                 apply.setUpdateUser(tripApply.getUpdateUser());
                 tripApplyMapper.updateById(apply);
-                return Boolean.TRUE;
+                return apply.getId();
             } else {
                 log.error("当前差旅申请已经存在,id={}", tripApply.getId());
                 throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前差旅申请已经存在");
@@ -45,9 +70,9 @@ public class TripApplyServiceImpl implements TripApplyService {
 
         // id不存在则新建申请
         tripApply.setAmount(tripApply.getDays() * 300);
-        tripApply.setStatus(1);
+        tripApply.setStatus(StatusEnum.ENABLE.getCode());
         tripApplyMapper.insert(tripApply);
-        return Boolean.TRUE;
+        return tripApply.getId();
     }
 
     /**
@@ -58,7 +83,9 @@ public class TripApplyServiceImpl implements TripApplyService {
     @Override
     public Boolean update(TripApply tripApply) {
         tripApply.setUpdateTime(new Date());
-        tripApply.setAmount(tripApply.getDays() * 300);
+        if(tripApply.getDays() != null) {
+            tripApply.setAmount(tripApply.getDays() * 300);
+        }
         tripApplyMapper.updateById(tripApply);
         return Boolean.TRUE;
     }
@@ -74,7 +101,7 @@ public class TripApplyServiceImpl implements TripApplyService {
             log.error("当前id对应的差旅申请为空,id={}", id);
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前id不存在");
         }
-        tripApply.setStatus(0);
+        tripApply.setStatus(StatusEnum.DISABLE.getCode());
         tripApply.setUpdateTime(new Date());
         tripApplyMapper.updateById(tripApply);
         return Boolean.TRUE;
@@ -86,8 +113,22 @@ public class TripApplyServiceImpl implements TripApplyService {
      * @return
      */
     @Override
-    public TripApply detail(Long id) {
-        return tripApplyMapper.selectById(id);
+    public TravelDetailResponse detail(Long id) {
+        TripApply tripApply = tripApplyMapper.selectById(id);
+        TravelDetailResponse response = TravelDetailResponse.builder()
+                .id(tripApply.getId())
+                .name(tripApply.getName())
+                .status(tripApply.getStatus())
+                .travelCity(tripApply.getTravelCity())
+                .attachment(tripApply.getAttachment())
+                .days(tripApply.getDays())
+                .amount(tripApply.getAmount())
+                .createTime(DateUtils.getDefaultDateString(tripApply.getCreateTime()))
+                .createUser(tripApply.getCreateUser())
+                .updateTime(DateUtils.getDefaultDateString(tripApply.getUpdateTime()))
+                .updateUser(tripApply.getUpdateUser())
+                .build();
+        return response;
     }
 
 }

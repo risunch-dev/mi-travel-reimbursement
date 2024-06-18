@@ -1,18 +1,28 @@
 package com.xiaomi.info.controller;
 
+import com.xiaomi.info.common.entity.PageResult;
 import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.common.response.PageResponse;
+import com.xiaomi.info.common.utils.DateUtils;
 import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.TripApplyService;
 
 import com.xiaomi.info.travel.request.TravelDeleteRequest;
+import com.xiaomi.info.travel.request.TravelListRequest;
+import com.xiaomi.info.travel.response.TravelCreateResponse;
+import com.xiaomi.info.travel.response.TravelDetailResponse;
+import com.xiaomi.info.travel.response.TravelListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,12 +41,51 @@ public class TravelController {
     @Resource
     private TripApplyService tripApplyService;
 
+    /**
+     * 列表，分页查询
+     * @param request
+     * @return
+     */
+    @PostMapping("/list")
+    private Response<TravelListResponse> list(@RequestBody TravelListRequest request) {
+        // 校验参数
+        checkUserListParameters(request);
+        String createUser = request.getCreateUser();
+        PageResult<TripApply> pageResult = tripApplyService.list(createUser, request.getPageNum(), request.getPageSize());
+        TravelListResponse response = new TravelListResponse();
+        List<TravelDetailResponse> list = new ArrayList<>();
+        for(TripApply tripApply : pageResult.getData()) {
+            TravelDetailResponse travelDetailResponse = TravelDetailResponse.builder()
+                    .id(tripApply.getId())
+                    .name(tripApply.getName())
+                    .status(tripApply.getStatus())
+                    .travelCity(tripApply.getTravelCity())
+                    .attachment(tripApply.getAttachment())
+                    .days(tripApply.getDays())
+                    .amount(tripApply.getAmount())
+                    .createTime(DateUtils.getDefaultDateString(tripApply.getCreateTime()))
+                    .createUser(tripApply.getCreateUser())
+                    .updateTime(DateUtils.getDefaultDateString(tripApply.getUpdateTime()))
+                    .updateUser(tripApply.getUpdateUser())
+                    .build();
+            list.add(travelDetailResponse);
+        }
+        response.setList(list);
+        PageResponse pageResponse = new PageResponse();
+        BeanUtils.copyProperties(pageResult.getPageInfo(), pageResponse);
+        response.setPageInfo(pageResponse);
+        return Response.success(response);
+
+    }
+
     @PostMapping ("/create")
-    public Response<Boolean> create(@RequestBody TripApply tripApply) {
+    public Response<TravelCreateResponse> create(@RequestBody TripApply tripApply) {
         // 入参校验
         this.checkTripApplyCreateParameters(tripApply);
-        Boolean result = tripApplyService.create(tripApply);
-        return Boolean.TRUE.equals(result) ? Response.success(true) : Response.error("差旅申请创建失败");
+        TravelCreateResponse response = TravelCreateResponse.builder()
+                .id(tripApplyService.create(tripApply))
+                .build();
+        return Response.success(response);
     }
 
 
@@ -57,7 +106,7 @@ public class TravelController {
     }
 
     @PostMapping("/detail")
-    public Response<TripApply> detail(@RequestBody TravelDeleteRequest request) {
+    public Response<TravelDetailResponse> detail(@RequestBody TravelDeleteRequest request) {
         // 入参校验
         checkTripApplyDeleteParameters(request);
         return Response.success(tripApplyService.detail(request.getId()));
@@ -79,6 +128,9 @@ public class TravelController {
         }
         if (Objects.isNull(tripApply.getDays()) || tripApply.getDays() <= NumberUtils.INTEGER_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请day不合法");
+        }
+        if (StringUtils.isBlank(tripApply.getCreateUser())) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请创建人不能为空");
         }
     }
 
@@ -105,6 +157,22 @@ public class TravelController {
         }
         if (Objects.isNull(request.getId()) || request.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请id不合法");
+        }
+    }
+
+    /**
+     * 列表分页查询参数校验
+     * @param request
+     */
+    public void checkUserListParameters(TravelListRequest request) {
+        if (Objects.isNull(request)) {
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "入参不能为空");
+        }
+        if (Objects.isNull(request.getPageNum()) || request.getPageNum() <= NumberUtils.INTEGER_ZERO) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "pageNum不合法");
+        }
+        if (Objects.isNull(request.getPageSize()) || request.getPageSize() <= NumberUtils.INTEGER_ZERO) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "pageSize不合法");
         }
     }
 

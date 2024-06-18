@@ -16,7 +16,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCodes {
     BAD_PARAMETERS(40000001, "BAD_PARAMETERS"),
-    MISSING_PARAMETER(40000002, "MISSING_PARAMETER");
+    MISSING_PARAMETER(40000002, "MISSING_PARAMETER"),
+    ;
 
     private final Integer code;
     private final String desc;
