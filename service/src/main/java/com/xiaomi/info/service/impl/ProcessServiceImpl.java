@@ -165,7 +165,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         xmProcessMapper.updateById(xmProcess);
 
         // 记录操作审批信息记录
-        processRecordService.record(xmProcess.getId(), 1, "发起申请", userId);
+        processRecordService.recordProcess(xmProcess.getId(), 1, "发起申请", userId);
     }
 
     /**
@@ -262,7 +262,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
 
         XmProcessRecord xmProcessRecord = xmProcessRecordMapper.selectOne(new LambdaQueryWrapper<XmProcessRecord>()
                 .eq(XmProcessRecord::getProcessId, request.getProcessId()));
-        processRecordService.record(request.getProcessId(), request.getStatus(), description, xmProcessRecord.getOperateUserId());
+        processRecordService.recordProcess(request.getProcessId(), request.getStatus(), description, xmProcessRecord.getOperateUserId());
 
         // 计算下一个审批人
         XmProcess xmProcess = this.getById(request.getProcessId());

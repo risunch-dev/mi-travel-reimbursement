@@ -29,8 +29,8 @@ public class ProcessTravelController {
      */
     @GetMapping("/deploy")
     public Response<Boolean> deployProcess() {
-        return processTravelService.deployProcess() ?
-                Response.success(Boolean.TRUE) : Response.error("部署文件失败");
+        processTravelService.deployProcess();
+        return Response.success(true);
     }
 
     /**

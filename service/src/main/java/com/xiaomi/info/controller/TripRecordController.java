@@ -31,6 +31,8 @@ import java.util.Objects;
 @RequestMapping("/api/travel/apply/process")
 public class TripRecordController {
 
+    private static final String COMMON = "请求参数不能为空";
+
     @Resource
     private TripRecordService tripRecordService;
     /**
@@ -119,7 +121,7 @@ public class TripRecordController {
      */
     public void checkTripRecordSubmitParameters(TravelDeleteRequest request) {
         if (Objects.isNull(request)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (Objects.isNull(request.getId()) || request.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请id不合法");
@@ -132,7 +134,7 @@ public class TripRecordController {
      */
     public void checkTripRecordQueryListParameters(ProcessQueryListRequest request) {
         if (Objects.isNull(request)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (Objects.isNull(request.getId()) || request.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "查看待办任务的userId不合法");
@@ -145,7 +147,7 @@ public class TripRecordController {
      */
     public void checkTripRecordApproveParameters(ProcessApproveRequest request) {
         if (Objects.isNull(request)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (Objects.isNull(request.getId()) || request.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "审批的userId不合法");

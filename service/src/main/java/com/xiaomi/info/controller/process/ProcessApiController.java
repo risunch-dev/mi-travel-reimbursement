@@ -108,7 +108,7 @@ public class ProcessApiController {
      * @return
      */
     @PostMapping("approve")
-    public Response approve(@RequestBody ProcessApprovalRequest request) {
+    public Response<Boolean> approve(@RequestBody ProcessApprovalRequest request) {
         processService.approve(request);
         return Response.success();
     }

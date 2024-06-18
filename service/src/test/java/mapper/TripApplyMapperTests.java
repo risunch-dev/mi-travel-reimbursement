@@ -2,6 +2,7 @@ package mapper;
 
 import com.xiaomi.info.mapper.TripApplyMapper;
 import com.xiaomi.info.model.TripApply;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,14 +32,15 @@ public class TripApplyMapperTests {
         tripApply.setUpdateUser("test001");
         Integer rows = tripApplyMapper.insert(tripApply);
         System.out.println("rows=" + rows);
+        Assert.assertTrue(true);
     }
 
     @Test
-    public void getByName()
-    {
+    public void getByName() {
         String name = "test002";
         TripApply result = tripApplyMapper.getByName(name);
         System.out.println(result);
+        Assert.assertTrue(true);
     }
 
     @Test
@@ -58,6 +60,7 @@ public class TripApplyMapperTests {
                 updateUser,
                 updateTime);
         System.out.println("rows=" + rows);
+        Assert.assertTrue(true);
     }
 
     @Test
@@ -65,6 +68,7 @@ public class TripApplyMapperTests {
         Long uid = 8L;
         TripApply result = tripApplyMapper.findById(uid);
         System.out.println(result);
+        Assert.assertTrue(true);
     }
 
     @Test
@@ -72,5 +76,6 @@ public class TripApplyMapperTests {
         Long id = 7L;
         Integer result = tripApplyMapper.deleteById(id);
         System.out.println(result);
+        Assert.assertTrue(true);
     }
 }

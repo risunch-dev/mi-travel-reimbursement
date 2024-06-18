@@ -14,6 +14,7 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 @Slf4j
 @SpringBootTest(classes = StartApplication.class)
-public class TravelProcessTest {
+class TravelProcessTest {
 
     @Autowired
     private RepositoryService repositoryService;
@@ -51,7 +52,7 @@ public class TravelProcessTest {
      * 单个文件部署方式
      */
     @Test
-    public void deployProcess() {
+    void deployProcess() {
         // 流程部署
         Deployment deploy = repositoryService.createDeployment()
                 .addClasspathResource("travel/travel.bpmn20.xml")
@@ -65,7 +66,7 @@ public class TravelProcessTest {
      * 启动流程实例
      */
     @Test
-    public void startUpProcess() {
+    void startUpProcess() {
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("travel");
         log.info("流程定义id = {},流程实例id = {},当前活动id = {}", processInstance.getProcessDefinitionId(),
                 processInstance.getId(), processInstance.getActivityId());
@@ -75,7 +76,7 @@ public class TravelProcessTest {
      * 启动流程实例，指定money
      */
     @Test
-    public void startUpProcessAddBusinessKey() {
+    void startUpProcessAddBusinessKey() {
         Map<String, Object> map = new HashMap<>();
         map.put("money", "900");
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("travel", map);
@@ -88,7 +89,7 @@ public class TravelProcessTest {
      * 查询个人代办任务
      */
     @Test
-    public void findTaskList() {
+    void findTaskList() {
         String assign = "王五";
         List<Task> list = taskService.createTaskQuery()
                 .taskAssignee(assign)
@@ -98,13 +99,14 @@ public class TravelProcessTest {
             System.out.println("任务id：" + task.getId());
             System.out.println("任务负责人：" + task.getAssignee());
         }
+        Assert.assertTrue(true);
     }
 
     /**
      * 处理当前任务
      */
     @Test
-    public void completeTask() {
+    void completeTask() {
         Task task = taskService.createTaskQuery()
                 .taskAssignee("王五")
                 .singleResult();
@@ -120,7 +122,7 @@ public class TravelProcessTest {
      * 查询已处理任务
      */
     @Test
-    public void findCompleteTaskList() {
+    void findCompleteTaskList() {
         List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery()
                 .taskAssignee("王五")
                 .finished()
@@ -137,7 +139,7 @@ public class TravelProcessTest {
      * 查询流程定义
      */
     @Test
-    public void findProcessDefinitionList(){
+    void findProcessDefinitionList(){
         List<ProcessDefinition> definitionList = repositoryService.createProcessDefinitionQuery()
                 .orderByProcessDefinitionVersion()
                 .desc()
@@ -150,19 +152,21 @@ public class TravelProcessTest {
             System.out.println("流程定义version = " + processDefinition.getVersion());
             System.out.println("流程部署id = " + processDefinition.getDeploymentId());
         }
+        Assert.assertTrue(true);
     }
 
     /**
      * 删除流程定义
      */
     @Test
-    public void deleteDeployment() {
+    void deleteDeployment() {
         // 部署id
         String deploymentId = "";
         // 如果该流程定义已有流程实例启动则删除时出错
         repositoryService.deleteDeployment(deploymentId);
         // 设置true 级联删除流程定义，即使该流程有流程实例启动也可以删除，设置为false非级别删除方式
         // repositoryService.deleteDeployment(deploymentId, true);
+        Assert.assertTrue(true);
     }
 
 

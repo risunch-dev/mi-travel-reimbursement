@@ -86,8 +86,7 @@ public class TripRecordServiceImpl implements TripRecordService {
         Date date = new Date();
         tripRecord.setUpdateTime(date);
         tripRecord.setCreateTime(date);
-        Integer row = tripRecordMapper.insert(tripRecord);
-        System.out.println(row);
+        tripRecordMapper.insert(tripRecord);
         Map<String,Object> variables = new HashMap<>();
         variables.put("amount",amount);
         ProcessInstance pi = runtimeService.startProcessInstanceByKey("test1",variables);
@@ -95,16 +94,14 @@ public class TripRecordServiceImpl implements TripRecordService {
         Task task = taskService.createTaskQuery()
                 .processInstanceId(pi.getProcessInstanceId())
                 .singleResult();
-        //提交任务的时候传入流程变量
-        System.out.println("instanceID:"+task.getProcessInstanceId()+",taskID:"+task.getId()+",name:"+task.getName()+",assignee:"+task.getAssignee());
+        // 提交任务的时候传入流程变量
+        log.info("instanceID={},taskId={},name={},assignee={}", task.getProcessInstanceId(), task.getId(), task.getName(), task.getAssignee());
         taskService.complete(task.getId());
         task = taskService.createTaskQuery()
                 .processInstanceId(pi.getProcessInstanceId())
                 .singleResult();
-
-        System.out.println("instanceID:"+task.getProcessInstanceId()+",taskID:"+task.getId()+",name:"+task.getName()+",assignee:"+task.getAssignee());
-        //如果任务对象为空,则流程执行结束
-        System.out.println("----------------------------");
+        log.info("instanceID={},taskId={},name={},assignee={}", task.getProcessInstanceId(), task.getId(), task.getName(), task.getAssignee());
+        // 如果任务对象为空,则流程执行结束
         return Boolean.TRUE;
     }
 
@@ -124,7 +121,7 @@ public class TripRecordServiceImpl implements TripRecordService {
 
         List<TaskResponse> list1 = new ArrayList<>();
         if (list == null)
-            System.out.println("该用户没有待办请求");
+            log.info("该用户没有待办请求");
         else {
             for (Task task : list) {
                 TaskResponse tv = new TaskResponse();
@@ -132,7 +129,7 @@ public class TripRecordServiceImpl implements TripRecordService {
                 tv.setName(task.getAssignee());
                 tv.setTaskId(task.getId());
                 tv.setTaskName(task.getName());
-                System.out.println("instanceID:"+task.getProcessInstanceId()+",taskID:"+task.getId()+",name:"+task.getName()+",assignee:"+task.getAssignee());
+                log.info("instanceID={},taskId={},name={},assignee={}", task.getProcessInstanceId(), task.getId(), task.getName(), task.getAssignee());
                 list1.add(tv);
             }
         }

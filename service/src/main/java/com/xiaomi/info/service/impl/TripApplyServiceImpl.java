@@ -54,7 +54,7 @@ public class TripApplyServiceImpl implements TripApplyService {
         Long applyId;
         // 如果id存在，则判断status
         if(apply != null) {
-            if(apply.getStatus() == StatusEnum.DISABLE.getCode()) {
+            if(apply.getStatus().equals(StatusEnum.DISABLE.getCode())) {
                 apply.setName(name);
                 apply.setStatus(StatusEnum.ENABLE.getCode());
                 apply.setTravelCity(tripApply.getTravelCity());
@@ -136,7 +136,7 @@ public class TripApplyServiceImpl implements TripApplyService {
     @Override
     public TravelDetailResponse detail(Long id) {
         TripApply tripApply = tripApplyMapper.selectById(id);
-        TravelDetailResponse response = TravelDetailResponse.builder()
+        return TravelDetailResponse.builder()
                 .id(tripApply.getId())
                 .name(tripApply.getName())
                 .status(tripApply.getStatus())
@@ -149,7 +149,6 @@ public class TripApplyServiceImpl implements TripApplyService {
                 .updateTime(DateUtils.getDefaultDateString(tripApply.getUpdateTime()))
                 .updateUser(tripApply.getUpdateUser())
                 .build();
-        return response;
     }
 
 }

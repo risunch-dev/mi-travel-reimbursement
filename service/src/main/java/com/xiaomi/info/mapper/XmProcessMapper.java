@@ -24,5 +24,5 @@ public interface XmProcessMapper extends BaseMapper<XmProcess> {
 
     IPage<ProcessResponse> selectPage(Page<ProcessResponse> page,
                                       @Param("vo") ProcessQueryRequest processQueryRequest,
-                                      @Param("ew")LambdaQueryWrapper queryWrapper);
+                                      @Param("ew") LambdaQueryWrapper queryWrapper);
 }

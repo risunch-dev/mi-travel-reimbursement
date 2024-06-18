@@ -23,7 +23,7 @@ public class ReimbursementController {
         // 调用业务对象执行注册
         reimbursementService.submit(reimBurseMent);
         // 返回
-        return new JsonResult<String>(OK,"success");
+        return new JsonResult<>(OK,"success");
     }
 
     @RequestMapping("{id}/change_detail")
@@ -31,7 +31,7 @@ public class ReimbursementController {
 
         reimbursementService.changeDetail(id,item,attachMent,amount);
         // 返回
-        return new JsonResult<String>(OK,"Apply update successfully");
+        return new JsonResult<>(OK,"Apply update successfully");
     }
 
     @RequestMapping("{id}/delete")
@@ -39,7 +39,7 @@ public class ReimbursementController {
 
         reimbursementService.deleteById(id);
         // 返回
-        return new JsonResult<String>(OK,"Apply deleted successfully.");
+        return new JsonResult<>(OK,"Apply deleted successfully.");
     }
 
     @RequestMapping("{id}/detail")
@@ -47,7 +47,7 @@ public class ReimbursementController {
 
         Reimbursement result = reimbursementService.getById(id);
         // 返回
-        return new JsonResult<Reimbursement>(OK,result);
+        return new JsonResult<>(OK,result);
     }
 
 }

@@ -76,9 +76,9 @@ public class ProcessTravelServiceImpl extends ServiceImpl<XmProcessMapper, XmPro
                 .taskAssignee(name)
                 .list();
         for(Task task : list) {
-            System.out.println("流程实例id：" + task.getProcessInstanceId());
-            System.out.println("任务id：" + task.getId());
-            System.out.println("任务负责人：" + task.getAssignee());
+            log.info("流程实例id={}", task.getProcessInstanceId());
+            log.info("任务id={}", task.getId());
+            log.info("任务负责人={}", task.getAssignee());
         }
         return true;
     }

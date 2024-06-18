@@ -52,7 +52,7 @@ public class ProcessTemplateServiceImpl extends ServiceImpl<XmProcessTemplateMap
                 .orderByDesc(XmProcessTemplate::getId));
         List<XmProcessTemplate> processTemplateList = page.getRecords();
 
-        List<Long> processTypeIdList = processTemplateList.stream().map(processTemplate -> processTemplate.getProcessTypeId()).collect(Collectors.toList());
+        List<Long> processTypeIdList = processTemplateList.stream().map(XmProcessTemplate::getProcessTypeId).collect(Collectors.toList());
 
         if(!CollectionUtils.isEmpty(processTypeIdList)) {
             Map<Long, XmProcessType> processTypeIdToProcessTypeMap = processTypeService.list(new LambdaQueryWrapper<XmProcessType>()

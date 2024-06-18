@@ -1,6 +1,7 @@
 import com.xiaomi.info.StartApplication;
 import com.xiaomi.info.model.XmUser;
 import com.xiaomi.info.service.UserService;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +18,15 @@ import java.util.List;
  * @Version 1.0
  */
 @SpringBootTest(classes = StartApplication.class)
-public class TestDemo2 {
+class TestDemo2 {
 
     @Autowired
     public UserService userService;
 
     @Test
-    public void getAll() {
+    void getAll() {
         List<XmUser> list = userService.list();
         System.out.println(list);
+        Assert.assertTrue(true);
     }
 }

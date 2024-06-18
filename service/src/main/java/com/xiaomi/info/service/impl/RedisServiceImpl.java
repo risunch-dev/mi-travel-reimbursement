@@ -3,6 +3,8 @@ package com.xiaomi.info.service.impl;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.exception.BasicRunException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -17,22 +19,46 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public boolean hasKey(String key) {
-        return stringRedisTemplate.hasKey(key);
+        if (stringRedisTemplate.hasKey(key) == null) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "异常");
+        } else {
+            return stringRedisTemplate.hasKey(key);
+        }
     }
 
     @Override
     public boolean expire(String key, long time) {
-        return stringRedisTemplate.expire(key, time, TimeUnit.SECONDS);
+        if (stringRedisTemplate.expire(key, time, TimeUnit.SECONDS)) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "异常");
+        } else {
+            return stringRedisTemplate.expire(key, time, TimeUnit.SECONDS);
+        }
     }
 
     @Override
     public long getTime(String key) {
-        return stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+        try {
+            if (stringRedisTemplate.getExpire(key, TimeUnit.SECONDS) == null) {
+                return -1;
+            } else {
+                return stringRedisTemplate.getExpire(key, TimeUnit.SECONDS);
+            }
+        } catch (Exception e) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "异常");
+        }
     }
 
     @Override
     public boolean persist(String key) {
-        return stringRedisTemplate.persist(key);
+        try {
+            if(stringRedisTemplate.persist(key) == null) {
+                return false;
+            } else {
+                return stringRedisTemplate.persist(key);
+            }
+        } catch (Exception e) {
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "异常");
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * ClassName: BaseEnitiy
+ * ClassName: BaseEntity
  * Package: com.xiaomi.info.model.base
  * Description:
  *
