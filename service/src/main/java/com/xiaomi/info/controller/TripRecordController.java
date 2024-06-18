@@ -1,21 +1,19 @@
 package com.xiaomi.info.controller;
 
-import com.xiaomi.info.service.ITripRecordService;
+import com.xiaomi.info.response.Response;
+import com.xiaomi.info.service.TripRecordService;
+import com.xiaomi.info.travel.response.ProcessQueryListResponse;
+import com.xiaomi.info.travel.request.ProcessApproveRequest;
+import com.xiaomi.info.travel.request.ProcessQueryListRequest;
 import com.xiaomi.info.travel.request.TravelDeleteRequest;
-import com.xiaomi.info.util.JsonResult;
-import com.xiaomi.info.vo.TaskVO;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * ClassName: TripRecordController
  * Package: com.xiaomi.info.controller
- * Description:
+ * Description: 审批流接口
  *
  * @Author 张芳泽
  * @Create 2024/6/4 22:27
@@ -25,55 +23,49 @@ import java.util.List;
 @RequestMapping("/api/travel/apply")
 public class TripRecordController {
 
-    public static final int OK = 200;
-
     @Resource
-    private ITripRecordService tripRecordService;
+    private TripRecordService tripRecordService;
 
-    @RequestMapping("/submit")
-    public JsonResult<String> submit(@RequestBody TravelDeleteRequest request) {
-
-        // 调用业务对象执行注册
-        tripRecordService.submit(request.getId());
-        // 返回
-        return new JsonResult<String>(OK,"Submit successfully");
+    /**
+     * 启动流程实例
+     * @param request 差旅申请id
+     * @return
+     */
+    @PostMapping("/submit")
+    public Response<Boolean> submit(@RequestBody TravelDeleteRequest request) {
+        return Response.success(tripRecordService.submit(request.getId()));
     }
 
-    @RequestMapping("inquire/{id}")
-    public JsonResult<List<TaskVO>> inquire(@PathVariable("id") Long id) {
-
-        // 调用业务对象执行注册
-        List<TaskVO> data = tripRecordService.Inquire(id);
-        // 返回
-        return new JsonResult<List<TaskVO>>(OK,data);
+    /**
+     * 查看个人代办任务
+     * @param  request userId
+     * @return
+     */
+    @PostMapping ("/queryList")
+    public Response<ProcessQueryListResponse> queryList(@RequestBody ProcessQueryListRequest request) {
+        ProcessQueryListResponse response = ProcessQueryListResponse.builder()
+                .list(tripRecordService.query(request.getId()))
+                .build();
+        return Response.success(response);
     }
 
-    @RequestMapping("pass/{id}")
-    public JsonResult<String> pass(@PathVariable("id") Long id,String instanceId,String desc) {
-        String data;
-        Integer result = tripRecordService.pass(id,instanceId,desc);
-        if(result == 1)
-        {
-            data = "Pass the examination";
-        }
-        else
-            data = "No qualifications or to-do list";
-        // 返回
-        return new JsonResult<>(OK,data);
+    /**
+     * 审批通过
+     * @param request userId、instanceId、desc
+     * @return
+     */
+    @PostMapping("/approve")
+    public Response<Boolean> approve(@RequestBody ProcessApproveRequest request) {
+        return Response.success(tripRecordService.approve(request));
     }
 
-    @RequestMapping("turn_down/{id}")
-    public JsonResult<String> turnDown(@PathVariable("id") Long id, String instanceId, String desc) {
-
-        String data;
-        Integer result = tripRecordService.turnDown(id,instanceId,desc);
-        if(result == 1)
-        {
-            data = "TurnDown the examination";
-        }
-        else
-            data = "No qualifications or to-do list";
-        // 返回
-        return new JsonResult<>(OK,data);
+    /**
+     * 审批驳回
+     * @param request userId、instanceId、desc
+     * @return
+     */
+    @PostMapping("/reject")
+    public Response<Boolean> reject(@RequestBody ProcessApproveRequest request) {
+        return Response.success(tripRecordService.reject(request));
     }
 }
