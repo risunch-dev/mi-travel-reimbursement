@@ -63,9 +63,13 @@ public class TripRecordServiceImpl implements TripRecordService {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "没有id对应的差旅申请");
         }
         TripRecord tripRecord = new TripRecord();
-        String name = tripApply.getName();
+        String name = tripApply.getCreateUser();
         XmUser user = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
                 .eq(XmUser::getName, name));
+        if(user == null) {
+            log.error("当前name对应用户为空,name={}", name);
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前name不存在");
+        }
         tripRecord.setUserId(user.getId());
         tripRecord.setPlanId(user.getLeaderId());
         Integer amount = tripApply.getAmount();
@@ -106,8 +110,7 @@ public class TripRecordServiceImpl implements TripRecordService {
     public List<TaskResponse> query(Long id) {
         XmUser xmUser = xmUserMapper.selectOne(new LambdaQueryWrapper<XmUser>()
                 .eq(XmUser::getId, id));
-        String name = xmUser.getName();
-        String assignee = name;
+        String assignee = xmUser.getName();
         List<Task> list = taskService.createTaskQuery()
                 .taskAssignee(assignee)//只查询该任务负责人的任务
                 .list();
@@ -167,7 +170,7 @@ public class TripRecordServiceImpl implements TripRecordService {
                     Map<String,Object> variables = new HashMap<>();
                     variables.put("description", desc);
                     variables.put("outcome",command);
-                    taskService.complete(task.getId(),variables);
+                    taskService.complete(task.getId(),variables, true);
                     return Boolean.TRUE;
                 }
             }

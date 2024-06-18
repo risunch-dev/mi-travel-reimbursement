@@ -14,7 +14,6 @@ import com.xiaomi.info.service.TripApplyService;
 import com.xiaomi.info.travel.response.TravelDetailResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,30 +48,42 @@ public class TripApplyServiceImpl implements TripApplyService {
     @Override
     public Long create(TripApply tripApply) {
         TripApply apply = tripApplyMapper.selectById(tripApply.getId());
+        String name = tripApply.getName() == null ? tripApply.getCreateUser() + "提出的" + tripApply.getTravelCity() + "的差旅申请" :
+                tripApply.getName();
+        TripApply insertApply = new TripApply();
+        Long applyId;
         // 如果id存在，则判断status
         if(apply != null) {
             if(apply.getStatus() == StatusEnum.DISABLE.getCode()) {
-                apply.setName(tripApply.getName());
+                apply.setName(name);
                 apply.setStatus(StatusEnum.ENABLE.getCode());
                 apply.setTravelCity(tripApply.getTravelCity());
-                apply.setAttachment(apply.getAttachment());
+                apply.setAttachment(tripApply.getAttachment());
                 apply.setDays(tripApply.getDays());
                 apply.setAmount(tripApply.getDays() * 300);
                 apply.setUpdateTime(new Date());
                 apply.setUpdateUser(tripApply.getUpdateUser());
                 tripApplyMapper.updateById(apply);
-                return apply.getId();
+                applyId = apply.getId();
             } else {
                 log.error("当前差旅申请已经存在,id={}", tripApply.getId());
                 throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前差旅申请已经存在");
             }
+        } else {
+            insertApply.setCreateUser(tripApply.getCreateUser());
+            insertApply.setName(name);
+            insertApply.setStatus(StatusEnum.ENABLE.getCode());
+            insertApply.setTravelCity(tripApply.getTravelCity());
+            insertApply.setAttachment(tripApply.getAttachment());
+            insertApply.setDays(tripApply.getDays());
+            insertApply.setAmount(tripApply.getDays() * 300);
+            insertApply.setCreateTime(new Date());
+            tripApplyMapper.insert(insertApply);
+            applyId = insertApply.getId();
+            log.info("差旅申请的id={}", applyId);
         }
 
-        // id不存在则新建申请
-        tripApply.setAmount(tripApply.getDays() * 300);
-        tripApply.setStatus(StatusEnum.ENABLE.getCode());
-        tripApplyMapper.insert(tripApply);
-        return tripApply.getId();
+        return applyId;
     }
 
     /**
@@ -82,11 +93,21 @@ public class TripApplyServiceImpl implements TripApplyService {
      */
     @Override
     public Boolean update(TripApply tripApply) {
-        tripApply.setUpdateTime(new Date());
+        TripApply apply = tripApplyMapper.selectOne(new LambdaQueryWrapper<TripApply>()
+                .eq(TripApply::getId, tripApply.getId()));
+        apply.setUpdateTime(new Date());
         if(tripApply.getDays() != null) {
-            tripApply.setAmount(tripApply.getDays() * 300);
+            apply.setDays(tripApply.getDays());
+            apply.setAmount(tripApply.getDays() * 300);
         }
-        tripApplyMapper.updateById(tripApply);
+        if(tripApply.getTravelCity() != null) {
+            apply.setTravelCity(tripApply.getTravelCity());
+            apply.setName(apply.getCreateUser() + "提出的" + tripApply.getTravelCity() + "的差旅申请");
+        }
+        if(tripApply.getUpdateUser() != null) {
+            apply.setUpdateUser(tripApply.getUpdateUser());
+        }
+        tripApplyMapper.updateById(apply);
         return Boolean.TRUE;
     }
 
