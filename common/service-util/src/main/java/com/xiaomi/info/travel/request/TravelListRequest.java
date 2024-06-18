@@ -21,7 +21,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TravelListResquest extends PageRequest implements Serializable {
+public class TravelListRequest extends PageRequest implements Serializable {
 
-    private String name;
+    /**
+     * 差旅申请名称
+     */
+    private String createUser;
 }

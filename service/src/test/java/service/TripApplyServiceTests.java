@@ -2,6 +2,7 @@ package service;
 
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.service.TripApplyService;
+import com.xiaomi.info.travel.response.TravelDetailResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -62,7 +63,7 @@ public class TripApplyServiceTests {
     @Test
     public void getById() {
         Long id = 8L;
-        TripApply result = tripApplyService.detail(id);
+        TravelDetailResponse result = tripApplyService.detail(id);
         System.out.println(result);
     }
 }
