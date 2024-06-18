@@ -1,70 +1,93 @@
 package com.xiaomi.info.service.impl;
 
+import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.mapper.TripApplyMapper;
 import com.xiaomi.info.model.TripApply;
 import com.xiaomi.info.service.TripApplyService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.Date;
 @Service
+@Slf4j
 public class TripApplyServiceImpl implements TripApplyService {
-    private final TripApplyMapper tripApplyMapper;
+    @Resource
+    private TripApplyMapper tripApplyMapper;
 
-    public TripApplyServiceImpl(TripApplyMapper tripApplyMapper) {
-        this.tripApplyMapper = tripApplyMapper;
+    /**
+     * 创建差旅申请
+     * @param tripApply
+     * @return
+     */
+    @Override
+    public Boolean create(TripApply tripApply) {
+        TripApply apply = tripApplyMapper.selectById(tripApply.getId());
+        // 如果id存在，则判断status
+        if(apply != null) {
+            if(apply.getStatus() == 0) {
+                apply.setName(tripApply.getName());
+                apply.setStatus(1);
+                apply.setTravelCity(tripApply.getTravelCity());
+                apply.setAttachment(apply.getAttachment());
+                apply.setDays(tripApply.getDays());
+                apply.setAmount(tripApply.getDays() * 300);
+                apply.setUpdateTime(new Date());
+                apply.setUpdateUser(tripApply.getUpdateUser());
+                tripApplyMapper.updateById(apply);
+                return true;
+            } else {
+                log.error("当前差旅申请已经存在,id={}", tripApply.getId());
+                throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前差旅申请已经存在");
+            }
+        }
+
+        // id不存在则新建申请
+        tripApply.setAmount(tripApply.getDays() * 300);
+        tripApply.setStatus(1);
+        tripApplyMapper.insert(tripApply);
+        return true;
     }
 
+    /**
+     * 差旅申请编辑
+     * @param tripApply 编辑内容
+     * @return
+     */
     @Override
-    public void submit(TripApply tripApply) {
-        String name = tripApply.getName();
-        Integer day = tripApply.getDays();
-        tripApply.setAmount(day*300);
-        Date now = new Date();
+    public Boolean update(TripApply tripApply) {
+        tripApply.setUpdateTime(new Date());
+        tripApply.setAmount(tripApply.getDays() * 300);
+        tripApplyMapper.updateById(tripApply);
+        return true;
+    }
+
+    /**
+     * 删除申请：软删除
+     * @param id 根据id删除
+     */
+    @Override
+    public Boolean delete(Long id) {
+        TripApply tripApply = tripApplyMapper.selectById(id);
+        if(tripApply == null) {
+            log.error("当前id对应的差旅申请为空,id={}", id);
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前id不存在");
+        }
         tripApply.setStatus(0);
-        tripApply.setCreateUser(name);
-        tripApply.setCreateTime(now);
-        tripApply.setUpdateUser(name);
-        tripApply.setUpdateTime(now);
-        Integer rows = tripApplyMapper.insert(tripApply);
-        // 判断受影响的行数是否不为1
-        /*if (rows != 1) {
-            // 是：插入数据时出现某种错误，则抛出InsertException异常
-            throw new InsertException("添加用户数据出现未知错误，请联系系统管理员");
-        }*/
+        tripApply.setUpdateTime(new Date());
+        tripApplyMapper.updateById(tripApply);
+        return true;
     }
 
+    /**
+     * 详情接口
+     * @param id 根据id查看差旅申请详情
+     * @return
+     */
     @Override
-    public void changeDetail(Long id, String title, Integer days,String attachMent, String travelCity) {
-        TripApply result = tripApplyMapper.findById(id);
-        /*if(result == null)
-        {
-            throw new UserNotFoundException("用户数据不存在");
-        }*/
-        Date now = new Date();
-        Integer rows = tripApplyMapper.updateDetailById(id, title, days,travelCity,attachMent, title,now);
-        /*if (rows != 1) {
-            // 是：插入数据时出现某种错误，则抛出InsertException异常
-            throw new InsertException("添加用户数据出现未知错误，请联系系统管理员");
-        }*/
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        TripApply result = tripApplyMapper.findById(id);
-        /*if(result == null)
-        {
-            throw new UserNotFoundException("用户数据不存在");
-        }*/
-        Integer rows = tripApplyMapper.deleteById(id);
-        /*if (rows != 1) {
-            // 是：插入数据时出现某种错误，则抛出InsertException异常
-            throw new DeleteException("删除用户数据出现未知错误");
-        }*/
-    }
-
-    @Override
-    public TripApply getById(Long id) {
-        return tripApplyMapper.findById(id);
+    public TripApply detail(Long id) {
+        return tripApplyMapper.selectById(id);
     }
 
 }

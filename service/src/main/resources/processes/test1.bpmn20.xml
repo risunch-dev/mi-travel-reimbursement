@@ -5,17 +5,17 @@
     <userTask id="sid-D87DB7BA-CD17-4C01-A378-FFCD7A7A6962" name="申请" activiti:assignee="test006"/>
     <userTask id="sid-865BE964-19E1-42E8-B93D-104DE28C0CC1" name="主管审批">
       <extensionElements>
-        <activiti:taskListener event="create" class="com.cy.xm_travel_reimbursement.listener.SupervisorTaskListener"/>
+        <activiti:taskListener event="create" class="com.xiaomi.info.listener.SupervisorTaskListener"/>
       </extensionElements>
     </userTask>
     <userTask id="sid-4819C848-3E53-4F38-8270-A328845EFD49" name="经理审批">
       <extensionElements>
-        <activiti:taskListener event="create" class="com.cy.xm_travel_reimbursement.listener.ManagerTaskListener"/>
+        <activiti:taskListener event="create" class="com.xiaomi.info.listener.ManagerTaskListener"/>
       </extensionElements>
     </userTask>
     <userTask id="sid-3C9E1985-C2A3-495C-9487-76E40A8BA1DB" name="财务审批">
       <extensionElements>
-        <activiti:taskListener event="create" class="com.cy.xm_travel_reimbursement.listener.FinanceTaskListener"/>
+        <activiti:taskListener event="create" class="com.xiaomi.info.listener.FinanceTaskListener"/>
       </extensionElements>
     </userTask>
     <exclusiveGateway id="sid-1CECF955-BD6F-4B66-87F8-B47F38DD3956"/>

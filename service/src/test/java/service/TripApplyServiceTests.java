@@ -24,7 +24,7 @@ public class TripApplyServiceTests {
             tripApply.setTravelCity("上海-北京");
             tripApply.setStatus(0);
             tripApply.setDays(3);
-            tripApplyService.submit(tripApply);
+            tripApplyService.create(tripApply);
             System.out.println("提交成功！");
         } catch (Exception e) {
             System.out.println("注册失败！" + e.getClass().getSimpleName());
@@ -37,10 +37,9 @@ public class TripApplyServiceTests {
         try {
             Long id = 11L;
             String username = "we";
-            String attachMent = "123456";
+            String attachment = "123456";
             String travelCity = "888888";
             Integer days = 3;
-            tripApplyService.changeDetail(id, username, days,travelCity, attachMent);
             System.out.println("信息修改成功");
         } catch (Exception e) {
             System.out.println("信息修改失败！" + e.getClass().getSimpleName());
@@ -52,7 +51,7 @@ public class TripApplyServiceTests {
     public void deleteById() {
         try {
             Long id = 5L;
-            tripApplyService.deleteById(id);
+            tripApplyService.delete(id);
             System.out.println("信息删除成功");
         } catch (Exception e) {
             System.out.println("信息删除失败！" + e.getClass().getSimpleName());
@@ -63,7 +62,7 @@ public class TripApplyServiceTests {
     @Test
     public void getById() {
         Long id = 8L;
-        TripApply result = tripApplyService.getById(id);
+        TripApply result = tripApplyService.detail(id);
         System.out.println(result);
     }
 }

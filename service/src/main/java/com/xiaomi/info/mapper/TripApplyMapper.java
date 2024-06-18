@@ -8,11 +8,7 @@ import java.util.Date;
 
 @Mapper
 public interface TripApplyMapper extends BaseMapper<TripApply> {
-    /**
-     * 插入申请数据
-     * @param tripApply 申请单
-     * @return 受影响的行数
-     */
+
     TripApply getByName(String name);
     Integer updateDetailById(
             Long id,

@@ -1,5 +1,6 @@
 package com.xiaomi.info.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.xiaomi.info.entity.TripRecord;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,11 +14,5 @@ import org.apache.ibatis.annotations.Mapper;
  * @Version 1.0
  */
 @Mapper
-public interface TripRecordMapper {
-    /**
-     * 插入申请数据
-     * @param tripRecord 申请单
-     * @return 受影响的行数
-     */
-    Integer insert(TripRecord tripRecord);
+public interface TripRecordMapper extends BaseMapper<TripRecord> {
 }

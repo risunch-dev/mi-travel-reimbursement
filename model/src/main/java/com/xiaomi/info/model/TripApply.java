@@ -1,7 +1,10 @@
 package com.xiaomi.info.model;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 
@@ -9,7 +12,8 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TripApply{
+public class TripApply implements Serializable {
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
     private String name;
     private Integer status;
