@@ -38,6 +38,8 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/api/travel/apply")
 public class TravelController {
+
+    private static final String COMMON = "请求参数不能为空";
     @Resource
     private TripApplyService tripApplyService;
 
@@ -47,7 +49,7 @@ public class TravelController {
      * @return
      */
     @PostMapping("/list")
-    private Response<TravelListResponse> list(@RequestBody TravelListRequest request) {
+    public Response<TravelListResponse> list(@RequestBody TravelListRequest request) {
         // 校验参数
         checkUserListParameters(request);
         String createUser = request.getCreateUser();
@@ -118,7 +120,7 @@ public class TravelController {
      */
     public void checkTripApplyCreateParameters(TripApply tripApply) {
         if (Objects.isNull(tripApply)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (StringUtils.isBlank(tripApply.getTravelCity())) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请city不能为空");
@@ -137,7 +139,7 @@ public class TravelController {
      */
     public void checkTripApplyUpdateParameters(TripApply tripApply) {
         if (Objects.isNull(tripApply)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (Objects.isNull(tripApply.getId()) || tripApply.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请id不合法");
@@ -150,7 +152,7 @@ public class TravelController {
      */
     public void checkTripApplyDeleteParameters(TravelDeleteRequest request) {
         if (Objects.isNull(request)) {
-            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
+            throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), COMMON);
         }
         if (Objects.isNull(request.getId()) || request.getId() <= NumberUtils.LONG_ZERO) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请id不合法");
