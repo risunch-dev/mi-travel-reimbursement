@@ -7,7 +7,7 @@
 <resultMap id="TripApplyMapper" type="com.xiaomi.info.model.TripApply">
     <id column="id" property="id"/>
     <result column="travel_city" property="travelCity"/>
-    <result column="attachment" property="attachMent"/>
+    <result column="attachment" property="attachment"/>
     <result column="create_time" property="createTime"/>
     <result column="create_user" property="createUser"/>
     <result column="update_time" property="updateTime"/>

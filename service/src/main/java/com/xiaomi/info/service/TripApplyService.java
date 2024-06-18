@@ -4,13 +4,13 @@ import com.xiaomi.info.model.TripApply;
 
 public interface TripApplyService {
 
-        void submit(TripApply tripApply);
+        Boolean create(TripApply tripApply);
 
-        void changeDetail(Long id, String title, Integer days,String attachMent, String travelCity);
+        Boolean update(TripApply tripApply);
 
-        void deleteById(Long id);
+        Boolean delete(Long id);
 
-        TripApply getById(Long id);
+        TripApply detail(Long id);
 
 
 }

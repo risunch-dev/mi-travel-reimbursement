@@ -53,7 +53,7 @@ public class TripRecordServiceImpl implements ITripRecordService {
     public void submit(Long id) {
         TripApply tripApply = tripApplyMapper.selectById(id);
         if(tripApply == null) {
-            log.error("没有对应的差旅申请");
+            log.error("没有对应的差旅申请,id={}", id);
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "没有id对应的差旅申请");
         }
         TripRecord tripRecord = new TripRecord();

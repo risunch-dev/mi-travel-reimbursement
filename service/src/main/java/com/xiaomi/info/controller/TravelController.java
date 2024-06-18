@@ -1,15 +1,16 @@
 package com.xiaomi.info.controller;
 
+import com.xiaomi.info.common.enums.ErrorCodes;
+import com.xiaomi.info.exception.BasicRunException;
 import com.xiaomi.info.model.TripApply;
+import com.xiaomi.info.response.Response;
 import com.xiaomi.info.service.TripApplyService;
 
-import com.xiaomi.info.util.JsonResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.xiaomi.info.travel.request.TravelDeleteRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
-import static javax.security.auth.callback.ConfirmationCallback.OK;
+import javax.annotation.Resource;
 
 /**
  * ClassName: TravelController
@@ -20,42 +21,41 @@ import static javax.security.auth.callback.ConfirmationCallback.OK;
  * @Create 2024/5/18 13:43
  * @Version 1.0
  */
+@Slf4j
 @RestController
-@RequestMapping("/api/travel_apply")
+@RequestMapping("/api/travel/apply/process")
 public class TravelController {
-    @Autowired
+    @Resource
     private TripApplyService tripApplyService;
 
-    @RequestMapping("creat")
-    public JsonResult<String> submit(TripApply tripApply) {
-        // 调用业务对象执行注册
-        tripApplyService.submit(tripApply);
-        // 返回
-        return new JsonResult<String>(OK,"success");
+    @PostMapping ("/create")
+    public Response<Boolean> create(@RequestBody TripApply tripApply) {
+        tripApplyService.create(tripApply);
+        return Response.success(true);
     }
 
-    @RequestMapping("{id}/change_detail")
-    public JsonResult<String> changeDetail(@PathVariable("id") Long id, String name, Integer days, String travelCity, String attachMent) {
 
-        tripApplyService.changeDetail(id,name,days,attachMent,travelCity);
-        // 返回
-        return new JsonResult<String>(OK,"Apply update successfully");
+    @PostMapping("/update")
+    public Response<Boolean> update(@RequestBody TripApply tripApply) {
+        if(tripApply == null) {
+            log.error("当前id对应的差旅申请为空,id={}", tripApply.getId());
+            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "当前id不存在");
+        }
+        tripApplyService.update(tripApply);
+        return Response.success();
     }
 
-    @RequestMapping("{id}/delete")
-    public JsonResult<String> delete(@PathVariable("id") Long id) {
+    @PostMapping("/delete")
+    public Response<Boolean> delete(@RequestBody TravelDeleteRequest request) {
 
-        tripApplyService.deleteById(id);
-        // 返回
-        return new JsonResult<String>(OK,"Apply deleted successfully.");
+        tripApplyService.delete(request.getId());
+        return Response.success(true);
     }
 
-    @RequestMapping("{id}/detail")
-    public JsonResult<TripApply> get(@PathVariable("id") Long id) {
+    @PostMapping("/detail")
+    public Response<TripApply> detail(@RequestBody TravelDeleteRequest request) {
 
-        TripApply result = tripApplyService.getById(id);
-        // 返回
-        return new JsonResult<TripApply>(OK,result);
+        return Response.success(tripApplyService.detail(request.getId()));
     }
 }
 

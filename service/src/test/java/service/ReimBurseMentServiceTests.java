@@ -1,8 +1,7 @@
 package service;
 
-import com.google.protobuf.ServiceException;
-import com.xiaomi.info.model.ReimBurseMent;
-import com.xiaomi.info.service.ReimBurseMentService;
+import com.xiaomi.info.model.Reimbursement;
+import com.xiaomi.info.service.ReimbursementService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,14 +13,14 @@ import javax.annotation.Resource;
 @SpringBootTest
 public class ReimBurseMentServiceTests {
     @Resource
-    private ReimBurseMentService reimBurseMentService;
+    private ReimbursementService reimBurseMentService;
 
     @Test
     public void submit() {
         try {
-            ReimBurseMent reimBurseMent = new ReimBurseMent();
+            Reimbursement reimBurseMent = new Reimbursement();
             reimBurseMent.setName("test004");
-            reimBurseMent.setAttachMent("ww");
+            reimBurseMent.setAttachment("ww");
             reimBurseMent.setAmount(1000);
             reimBurseMent.setStatus(0);
             reimBurseMent.setItem("去北京");
@@ -38,7 +37,7 @@ public class ReimBurseMentServiceTests {
     @Test
     public void deleteById() {
         try {
-            Integer id = 4;
+            Long id = 4L;
             reimBurseMentService.deleteById(id);
             System.out.println("信息删除成功");
         } catch (Exception e) {
@@ -49,8 +48,8 @@ public class ReimBurseMentServiceTests {
 
     @Test
     public void getById() {
-        Integer id = 5;
-        ReimBurseMent result = reimBurseMentService.getById(id);
+        Long id = 5L;
+        Reimbursement result = reimBurseMentService.getById(id);
         System.out.println(result);
     }
 }

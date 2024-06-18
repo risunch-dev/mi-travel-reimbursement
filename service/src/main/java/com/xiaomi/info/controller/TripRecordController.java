@@ -1,9 +1,11 @@
 package com.xiaomi.info.controller;
 
 import com.xiaomi.info.service.ITripRecordService;
+import com.xiaomi.info.travel.request.TravelDeleteRequest;
 import com.xiaomi.info.util.JsonResult;
 import com.xiaomi.info.vo.TaskVO;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,10 +31,10 @@ public class TripRecordController {
     private ITripRecordService tripRecordService;
 
     @RequestMapping("/submit")
-    public JsonResult<String> submit(Long id) {
+    public JsonResult<String> submit(@RequestBody TravelDeleteRequest request) {
 
         // 调用业务对象执行注册
-        tripRecordService.submit(id);
+        tripRecordService.submit(request.getId());
         // 返回
         return new JsonResult<String>(OK,"Submit successfully");
     }

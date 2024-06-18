@@ -1,5 +1,7 @@
 package com.xiaomi.info.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +24,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 public class TripRecord {
+    @TableId(value = "id", type = IdType.INPUT)
     private Long id;
     private Long userId;
     private Integer planId;
