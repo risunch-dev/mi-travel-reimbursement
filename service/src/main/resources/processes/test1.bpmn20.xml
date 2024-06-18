@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
   <process id="test1" name="test1" isExecutable="true">
     <startEvent id="sid-8FAEF60F-329E-42BC-B2CA-8BB6712116BF"/>
-    <userTask id="sid-D87DB7BA-CD17-4C01-A378-FFCD7A7A6962" name="申请" activiti:assignee="test006"/>
+    <userTask id="sid-D87DB7BA-CD17-4C01-A378-FFCD7A7A6962" name="申请" activiti:assignee="朱安迪"/>
     <userTask id="sid-865BE964-19E1-42E8-B93D-104DE28C0CC1" name="主管审批">
       <extensionElements>
         <activiti:taskListener event="create" class="com.xiaomi.info.listener.SupervisorTaskListener"/>
@@ -34,10 +34,10 @@
       <conditionExpression xsi:type="tFormalExpression">${amount&gt;900}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-348DE05F-6BF8-4250-9222-D3711A5D63BE" sourceRef="sid-EDD7FC04-C184-4CA8-9920-D7D13CA2ACAF" targetRef="sid-3C9E1985-C2A3-495C-9487-76E40A8BA1DB">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='approval'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='approve'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-40AD0BAD-05F7-42EB-9998-5F569D39C3A2" sourceRef="sid-3A6D63FB-B6EA-42FB-B218-BBE1B2255745" targetRef="sid-9939A896-1FA4-45FD-BE0A-40B8113648C4">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='approval'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='approve'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-27F10CDA-A0B0-43B7-BC9D-C9BBEB01CB5A" sourceRef="sid-3A6D63FB-B6EA-42FB-B218-BBE1B2255745" targetRef="sid-D87DB7BA-CD17-4C01-A378-FFCD7A7A6962">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${outcome=='reject'}]]></conditionExpression>

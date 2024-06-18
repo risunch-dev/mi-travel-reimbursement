@@ -120,9 +120,6 @@ public class TravelController {
         if (Objects.isNull(tripApply)) {
             throw new BasicRunException(ErrorCodes.MISSING_PARAMETER.getCode(), "请求参数不能为空");
         }
-        if (StringUtils.isBlank(tripApply.getName())) {
-            throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请name不能为空");
-        }
         if (StringUtils.isBlank(tripApply.getTravelCity())) {
             throw new BasicRunException(ErrorCodes.BAD_PARAMETERS.getCode(), "差旅申请city不能为空");
         }
