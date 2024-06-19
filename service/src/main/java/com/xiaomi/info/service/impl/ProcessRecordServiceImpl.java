@@ -28,7 +28,7 @@ public class ProcessRecordServiceImpl extends ServiceImpl<XmProcessRecordMapper,
     private UserService userService;
 
     @Override
-    public void record(Long processId, Integer status, String description, Long userId) {
+    public void recordProcess(Long processId, Integer status, String description, Long userId) {
         XmUser xmUser = userService.getById(userId);
         XmProcessRecord xmProcessRecord = XmProcessRecord.builder()
                 .processId(processId)

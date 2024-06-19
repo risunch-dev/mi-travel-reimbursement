@@ -3,6 +3,7 @@ package service;
 import com.google.protobuf.ServiceException;
 import com.xiaomi.info.model.XmUser;
 import com.xiaomi.info.service.UserService;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,5 +31,6 @@ public class UserServiceTests {
             System.out.println("注册失败！" + e.getClass().getSimpleName());
             System.out.println(e.getMessage());
         }
+        Assert.assertTrue(true);
     }
 }

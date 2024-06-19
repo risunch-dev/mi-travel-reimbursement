@@ -91,8 +91,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
 
     @Override
     public IPage<ProcessResponse> selectPage(Page<ProcessResponse> pageParam, ProcessQueryRequest processQueryRequest) {
-        IPage<ProcessResponse> page = xmProcessMapper.selectPage(pageParam, processQueryRequest, null);
-        return page;
+        return xmProcessMapper.selectPage(pageParam, processQueryRequest, null);
     }
 
     /**
@@ -166,7 +165,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         xmProcessMapper.updateById(xmProcess);
 
         // 记录操作审批信息记录
-        processRecordService.record(xmProcess.getId(), 1, "发起申请", userId);
+        processRecordService.recordProcess(xmProcess.getId(), 1, "发起申请", userId);
     }
 
     /**
@@ -188,9 +187,6 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         for (Task item : list) {
             String processInstanceId = item.getProcessInstanceId();
             ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-            if (processInstance == null) {
-                continue;
-            }
             // 业务key
             String businessKey = processInstance.getBusinessKey();
             if (businessKey == null) {
@@ -256,7 +252,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
         String taskId = request.getTaskId();
         if (request.getStatus() == 1) {
             // 已通过
-            Map<String, Object> variables = new HashMap<String, Object>();
+            Map<String, Object> variables = new HashMap<>();
             taskService.complete(taskId, variables);
         } else {
             // 驳回
@@ -266,7 +262,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
 
         XmProcessRecord xmProcessRecord = xmProcessRecordMapper.selectOne(new LambdaQueryWrapper<XmProcessRecord>()
                 .eq(XmProcessRecord::getProcessId, request.getProcessId()));
-        processRecordService.record(request.getProcessId(), request.getStatus(), description, xmProcessRecord.getOperateUserId());
+        processRecordService.recordProcess(request.getProcessId(), request.getStatus(), description, xmProcessRecord.getOperateUserId());
 
         // 计算下一个审批人
         XmProcess xmProcess = this.getById(request.getProcessId());
@@ -388,8 +384,7 @@ public class ProcessServiceImpl extends ServiceImpl<XmProcessMapper, XmProcess> 
      * @return
      */
     private List<Task> getCurrentTaskList(String processInstanceId) {
-        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
-        return tasks;
+        return taskService.createTaskQuery().processInstanceId(processInstanceId).list();
     }
 
 }

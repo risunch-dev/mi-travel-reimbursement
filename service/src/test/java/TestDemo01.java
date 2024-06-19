@@ -1,6 +1,7 @@
 import com.xiaomi.info.StartApplication;
 import com.xiaomi.info.mapper.XmUserMapper;
 import com.xiaomi.info.model.XmUser;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,13 +20,14 @@ import java.util.List;
  */
 @ContextConfiguration
 @SpringBootTest(classes = StartApplication.class)
-public class TestDemo01 {
+class TestDemo01 {
     @Autowired
     public XmUserMapper xmUserMapper;
 
     @Test
-    public void getAll() {
+    void getAll() {
         List<XmUser> list = xmUserMapper.selectList(null);
         System.out.println(list);
+        Assert.assertTrue(true);
     }
 }

@@ -22,11 +22,11 @@ import java.io.Serializable;
 @Builder
 public class TaskResponse implements Serializable {
 
-    private String InstanceID;
+    private String instanceID;
 
-    private String TaskId;
+    private String taskId;
 
     private String name;
 
-    private String TaskName;
+    private String taskName;
 }

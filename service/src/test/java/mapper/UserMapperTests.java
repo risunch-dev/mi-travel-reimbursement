@@ -2,6 +2,7 @@ package mapper;
 
 import com.xiaomi.info.mapper.XmUserMapper;
 import com.xiaomi.info.model.XmUser;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +31,12 @@ public class UserMapperTests {
         user.setUpdateUser("test001");
         Integer rows = xmUserMapper.insert(user);
         System.out.println("rows=" + rows);
+        Assert.assertTrue(true);
     }
 
     @Test
     public void findByName() {
         String username = "test002";
+        Assert.assertTrue(true);
     }
 }

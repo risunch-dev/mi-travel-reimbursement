@@ -13,5 +13,5 @@ import com.xiaomi.info.model.process.XmProcessRecord;
  * @Version 1.0
  */
 public interface ProcessRecordService extends IService<XmProcessRecord> {
-    void record(Long processId, Integer status, String description, Long userId);
+    void recordProcess(Long processId, Integer status, String description, Long userId);
 }
